@@ -1,2 +1,1 @@
-﻿
-global using BlackBoot.Shared.Core;
+﻿global using BlackBoot.Shared.Core;

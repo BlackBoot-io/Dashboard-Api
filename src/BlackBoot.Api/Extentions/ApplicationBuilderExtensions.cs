@@ -1,6 +1,6 @@
-﻿namespace BlackBoot.Api.Extentions
+﻿namespace BlackBoot.Api.Extentions;
+
+public class ApplicationBuilderExtensions
 {
-    public class ApplicationBuilderExtensions
-    {
-    }
 }
+

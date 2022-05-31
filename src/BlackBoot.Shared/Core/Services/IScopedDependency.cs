@@ -1,8 +1,5 @@
-﻿
-
-namespace BlackBoot.Shared.Core;
+﻿namespace BlackBoot.Shared.Core;
 
 public interface IScopedDependency
 {
 }
-

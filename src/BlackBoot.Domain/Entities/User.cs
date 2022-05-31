@@ -27,4 +27,8 @@ public class User : IEntity
 
     public DateTime RegistrationDate { get; set; }
 
+    public ICollection<Transaction> Transactions { get; set; }
+    public ICollection<Notification> Notifications { get; set; }
+    public ICollection<WalletPool> WalletPools { get; set; }
+
 }

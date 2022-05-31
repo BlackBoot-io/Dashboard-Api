@@ -1,5 +1,4 @@
-﻿
-namespace BlackBoot.Domain.Entities;
+﻿namespace BlackBoot.Domain.Entities;
 
 [Table(nameof(Transaction), Schema = nameof(EntitySchema.Payment))]
 public class Transaction : IEntity

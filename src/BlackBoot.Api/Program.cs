@@ -4,7 +4,6 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 
-
 #region Services
 builder.Services.AddControllers();
 builder.Services.AddBlockinoContext(configuration);

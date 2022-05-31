@@ -1,5 +1,4 @@
-﻿
-
+﻿#nullable disable
 namespace BlackBoot.Domain.Entities;
 
 [Table(nameof(WalletPool), Schema = nameof(EntitySchema.Base))]
