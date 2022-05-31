@@ -1,7 +1,7 @@
 ﻿#nullable disable
 namespace BlackBoot.Domain.Entities;
 
-[Table(nameof(CrowdSaleSchedule), Schema = "Base")]
+[Table(nameof(CrowdSaleSchedule), Schema = nameof(EntitySchema.Base))]
 public class CrowdSaleSchedule : IEntity
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

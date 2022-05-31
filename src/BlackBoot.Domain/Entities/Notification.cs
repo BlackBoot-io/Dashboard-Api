@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlackBoot.Domain.Entities
+namespace BlackBoot.Domain.Entities;
+
+public class Notification
 {
-    internal class Notification
-    {
-    }
 }
+

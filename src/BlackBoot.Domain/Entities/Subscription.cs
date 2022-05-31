@@ -1,7 +1,7 @@
 ﻿#nullable disable
 namespace BlackBoot.Domain.Entities;
 
-[Table(nameof(Subscription), Schema = "Base")]
+[Table(nameof(Subscription), Schema = nameof(EntitySchema.Base))]
 public class Subscription : IEntity
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

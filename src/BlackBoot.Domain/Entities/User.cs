@@ -1,7 +1,6 @@
-﻿#nullable disable
-namespace BlackBoot.Domain.Entities;
+﻿namespace BlackBoot.Domain.Entities;
 
-[Table(nameof(User), Schema = "Base")]
+[Table(nameof(User), Schema = nameof(EntitySchema.Base))]
 public class User : IEntity
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

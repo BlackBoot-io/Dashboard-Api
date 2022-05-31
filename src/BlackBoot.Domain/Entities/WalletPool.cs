@@ -1,7 +1,8 @@
-﻿#nullable disable
+﻿
+
 namespace BlackBoot.Domain.Entities;
 
-[Table(nameof(WalletPool), Schema = "Base")]
+[Table(nameof(WalletPool), Schema = nameof(EntitySchema.Base))]
 public class WalletPool : IEntity
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

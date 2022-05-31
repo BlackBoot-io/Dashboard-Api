@@ -1,7 +1,7 @@
-﻿#nullable disable
+﻿
 namespace BlackBoot.Domain.Entities;
 
-[Table(nameof(Transaction), Schema = "Payment")]
+[Table(nameof(Transaction), Schema = nameof(EntitySchema.Payment))]
 public class Transaction : IEntity
 {
     public Guid TransactionId { get; set; }
