@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlackBoot.Data.Migrations
 {
     [DbContext(typeof(BlackBootDBContext))]
-    [Migration("20220602095922_InitialMigration")]
+    [Migration("20220602101511_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -244,6 +244,38 @@ namespace BlackBoot.Data.Migrations
                     b.ToTable("User", "Base");
                 });
 
+            modelBuilder.Entity("BlackBoot.Domain.Entities.UserJwtToken", b =>
+                {
+                    b.Property<int>("UserJwtTokenId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserJwtTokenId"), 1L, 1);
+
+                    b.Property<DateTimeOffset>("AccessTokenExpiresTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("AccessTokenHash")
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(max)");
+
+                    b.Property<DateTimeOffset>("RefreshTokenExpiresTime")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("RefreshTokenHash")
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(max)");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("UserJwtTokenId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserJwtToken", "Base");
+                });
+
             modelBuilder.Entity("BlackBoot.Domain.Entities.WalletPool", b =>
                 {
                     b.Property<int>("WalletPoolId")
@@ -300,6 +332,15 @@ namespace BlackBoot.Data.Migrations
                     b.Navigation("CrowdSaleSchedule");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BlackBoot.Domain.Entities.UserJwtToken", b =>
+                {
+                    b.HasOne("BlackBoot.Domain.Entities.User", "UserFk")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("UserFk");
                 });
 
             modelBuilder.Entity("BlackBoot.Domain.Entities.WalletPool", b =>

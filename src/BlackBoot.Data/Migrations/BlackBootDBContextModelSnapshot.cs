@@ -35,7 +35,8 @@ namespace BlackBoot.Data.Migrations
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(500)");
 
                     b.Property<DateTime>("From")
                         .HasColumnType("datetime2");
@@ -55,7 +56,8 @@ namespace BlackBoot.Data.Migrations
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<DateTime>("To")
                         .HasColumnType("datetime2");
@@ -82,7 +84,8 @@ namespace BlackBoot.Data.Migrations
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(2000)");
 
                     b.Property<byte>("Target")
                         .HasColumnType("tinyint");
@@ -114,7 +117,8 @@ namespace BlackBoot.Data.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(120)
-                        .HasColumnType("nvarchar(120)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(120)");
 
                     b.HasKey("SubscriptionId");
 
@@ -156,7 +160,8 @@ namespace BlackBoot.Data.Migrations
 
                     b.Property<string>("TxId")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(256)");
 
                     b.Property<byte>("Type")
                         .HasColumnType("tinyint");
@@ -169,7 +174,8 @@ namespace BlackBoot.Data.Migrations
 
                     b.Property<string>("WalletAddress")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(256)");
 
                     b.HasKey("TransactionId");
 
@@ -189,12 +195,14 @@ namespace BlackBoot.Data.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(128)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<byte>("Gender")
                         .HasColumnType("tinyint");
@@ -205,19 +213,22 @@ namespace BlackBoot.Data.Migrations
                     b.Property<string>("Nationality")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(256)");
 
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("WithdrawalWallet")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(256)");
 
                     b.HasKey("UserId");
 
@@ -243,13 +254,15 @@ namespace BlackBoot.Data.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("AccessTokenHash")
-                        .HasColumnType("nvarchar(max)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(max)");
 
                     b.Property<DateTimeOffset>("RefreshTokenExpiresTime")
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("RefreshTokenHash")
-                        .HasColumnType("nvarchar(max)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(max)");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -272,7 +285,8 @@ namespace BlackBoot.Data.Migrations
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(256)");
 
                     b.Property<bool>("IsUsed")
                         .HasColumnType("bit");

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -24,13 +25,13 @@ namespace BlackBoot.Data.Migrations
                     TokenForSale = table.Column<int>(type: "int", nullable: false),
                     From = table.Column<DateTime>(type: "datetime2", nullable: false),
                     To = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Title = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     MinimumBuy = table.Column<int>(type: "int", nullable: false),
                     InvestmentGoal = table.Column<int>(type: "int", nullable: false),
                     BonusCount = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
+                    Description = table.Column<string>(type: "varchar(500)", unicode: false, maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -44,7 +45,7 @@ namespace BlackBoot.Data.Migrations
                 {
                     SubscriptionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
+                    Email = table.Column<string>(type: "varchar(120)", unicode: false, maxLength: 120, nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -60,11 +61,11 @@ namespace BlackBoot.Data.Migrations
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     Gender = table.Column<byte>(type: "tinyint", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Nationality = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    WithdrawalWallet = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    FirstName = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
+                    Nationality = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
+                    Email = table.Column<string>(type: "varchar(128)", unicode: false, maxLength: 128, nullable: false),
+                    Password = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: false),
+                    WithdrawalWallet = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: true),
                     RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -81,7 +82,7 @@ namespace BlackBoot.Data.Migrations
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Target = table.Column<byte>(type: "tinyint", nullable: false),
                     Type = table.Column<byte>(type: "tinyint", nullable: false),
-                    Message = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    Message = table.Column<string>(type: "varchar(2000)", unicode: false, maxLength: 2000, nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -112,8 +113,8 @@ namespace BlackBoot.Data.Migrations
                     Type = table.Column<byte>(type: "tinyint", nullable: false),
                     Status = table.Column<byte>(type: "tinyint", nullable: false),
                     ConfirmDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    WalletAddress = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    TxId = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
+                    WalletAddress = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: true),
+                    TxId = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -142,9 +143,9 @@ namespace BlackBoot.Data.Migrations
                     UserJwtTokenId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    AccessTokenHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AccessTokenHash = table.Column<string>(type: "varchar(max)", unicode: false, nullable: true),
                     AccessTokenExpiresTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    RefreshTokenHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenHash = table.Column<string>(type: "varchar(max)", unicode: false, nullable: true),
                     RefreshTokenExpiresTime = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
                 constraints: table =>
@@ -167,7 +168,7 @@ namespace BlackBoot.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Network = table.Column<byte>(type: "tinyint", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Address = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: false),
                     IsUsed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
