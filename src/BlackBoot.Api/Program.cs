@@ -6,7 +6,7 @@ var configuration = builder.Configuration;
 
 #region Services
 builder.Services.AddControllers();
-builder.Services.AddBlockinoContext(configuration);
+builder.Services.AddBlockBootDbContext(configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 #endregion

@@ -2,10 +2,10 @@
 
 namespace BlackBoot.Data.Context;
 
-public class BlockinoDBContext : DbContext
+public class BlackBootDBContext : DbContext
 {
-    public BlockinoDBContext() { }
-    public BlockinoDBContext(DbContextOptions<BlockinoDBContext> options) : base(options) { }
+    public BlackBootDBContext() { }
+    public BlackBootDBContext(DbContextOptions<BlackBootDBContext> options) : base(options) { }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) => configurationBuilder.DefaultTypeMapping<string>().IsUnicode(false);
 
