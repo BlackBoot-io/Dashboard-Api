@@ -29,7 +29,7 @@ public class Transaction : IEntity
     public TransactionStatus Status { get; set; }
 
     public DateTime? ConfirmDate { get; set; }
-   
+
     [MaxLength(256)]
     public string WalletAddress { get; set; }
 

@@ -1,14 +1,19 @@
 using BlackBoot.Api.Extentions;
+using BlackBoot.Api.Middlewares;
+using BlackBoot.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 
 #region Services
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 builder.Services.AddBlockBootDbContext(configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddBlackBootAuthentication(configuration);
+builder.Services.RegisterApplicatioinServices();
 #endregion
 
 #region Application
@@ -20,9 +25,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseCors();
+
+app.UseEndpoints(config =>
+{
+    config.MapControllers();
+});
 
 app.Run();
 #endregion

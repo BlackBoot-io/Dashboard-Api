@@ -10,8 +10,4 @@
     <ProjectReference Include="..\BlackBoot.Shared\BlackBoot.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Dtos\" />
-  </ItemGroup>
-
 </Project>

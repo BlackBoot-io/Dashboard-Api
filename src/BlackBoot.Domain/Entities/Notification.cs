@@ -14,7 +14,7 @@ public class Notification
     public MessageTarget Target { get; set; }
     public MessageType Type { get; set; }
 
-    [Required,MaxLength(2000)]
+    [Required, MaxLength(2000)]
     public string Message { get; set; }
 
     public DateTime Date { get; set; }
