@@ -12,6 +12,18 @@ builder.Services.AddControllers();
 builder.Services.AddBlockBootDbContext(configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins(configuration.GetSection("AllowOrgin").Value.Split(";"))
+        .SetIsOriginAllowedToAllowWildcardSubdomains()
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();
+
+    });
+});
 builder.Services.AddBlackBootAuthentication(configuration);
 builder.Services.RegisterApplicatioinServices();
 #endregion
