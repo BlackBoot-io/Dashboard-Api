@@ -14,8 +14,15 @@ public class UsersService : IUsersService
         _users = context.Set<User>();
     }
 
+
     public async Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => await _users.FirstOrDefaultAsync(x => x.Email.ToUpper() == email.ToUpper(), cancellationToken);
 
-    public async Task<User> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) => await _users.FindAsync(new object[] { id }, cancellationToken);
+    public async Task<User> GetAsync(Guid id, CancellationToken cancellationToken = default) => await _users.FindAsync(new object[] { id }, cancellationToken);
+
+    public async Task<bool> CheckPasswordAsync(User user, string password, CancellationToken cancellationToken = default)
+    {
+        return HashGenerator.Hash(password) == user.Password;
+    }
+
 
 }

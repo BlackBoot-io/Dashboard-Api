@@ -4,6 +4,6 @@ namespace BlackBoot.Services.Interfaces;
 
 public interface IUserJwtTokenFactory : ITransientDependency
 {
-    Task<UserTokenDto> GenerateTokenAsync(Guid userId);
+    (string Token, int TokenExpirationMinutes) CreateToken(List<Claim> claims, JwtTokenType tokenType);
     ClaimsPrincipal ReadToken(string token);
 }

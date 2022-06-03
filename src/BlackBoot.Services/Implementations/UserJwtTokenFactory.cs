@@ -9,38 +9,43 @@ namespace BlackBoot.Services.Implementations;
 public class UserJwtTokenFactory : IUserJwtTokenFactory
 {
     private readonly JwtSettings _jwtSettings;
-    private readonly IUsersService _usersservice;
-    public UserJwtTokenFactory(IUsersService usersservice, IConfiguration configuration)
+    public UserJwtTokenFactory(IConfiguration configuration)
     {
         _jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
-        _usersservice = usersservice;
     }
 
-    public async Task<UserTokenDto> GenerateTokenAsync(Guid userId)
+    public (string Token, int TokenExpirationMinutes) CreateToken(List<Claim> claims, JwtTokenType tokenType)
     {
-        var user = await _usersservice.GetByIdAsync(userId, default);
-        var accessToken = CreateToken(new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier,user.UserId.ToString()),
-                new Claim(ClaimTypes.Email,user.Email)
-            }, _jwtSettings.AccessTokenExpirationMinutes);
-
-        var refreshToken = CreateToken(new List<Claim>
-            {
-               new Claim("AccessToken",accessToken)
-
-            }, _jwtSettings.RefreshTokenExpirationMinutes);
-        var result = new UserTokenDto()
+        var expirationTimeMinutes = tokenType switch
         {
-            AccessToken = accessToken,
-            AccessTokenExpireTime = DateTimeOffset.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpirationMinutes),
-            RefreshToken = refreshToken,
-            RefreshTokenExpireTime = DateTimeOffset.UtcNow.AddMinutes(_jwtSettings.RefreshTokenExpirationMinutes)
+            JwtTokenType.AccessToken => _jwtSettings.AccessTokenExpirationMinutes,
+            JwtTokenType.RefreshToken => _jwtSettings.RefreshTokenExpirationMinutes,
+            _ => throw new ArgumentOutOfRangeException(nameof(tokenType), $"Not expected direction value: {tokenType}"),
         };
 
-        return result;
-    }
+        var tokenHandler = new JwtSecurityTokenHandler();
 
+        var secretKey = Encoding.UTF8.GetBytes(_jwtSettings.Key);
+        var issuerSigningKey = new SymmetricSecurityKey(secretKey);
+
+        var encryptionkey = Encoding.UTF8.GetBytes(_jwtSettings.EncryptionKey);
+        var tokenDecryptionKey = new SymmetricSecurityKey(encryptionkey);
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(claims),
+            IssuedAt = DateTime.UtcNow,
+            Expires = DateTime.UtcNow.AddMinutes(expirationTimeMinutes),
+            SigningCredentials = new SigningCredentials(issuerSigningKey, SecurityAlgorithms.HmacSha256Signature),
+            Issuer = _jwtSettings.Issuer,
+            Audience = _jwtSettings.Audience,
+            EncryptingCredentials = new EncryptingCredentials(tokenDecryptionKey,
+                                                            SecurityAlgorithms.Aes256KW,
+                                                            SecurityAlgorithms.Aes256CbcHmacSha512)
+        };
+        var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
+        return (tokenHandler.WriteToken(token), expirationTimeMinutes);
+    }
     public ClaimsPrincipal ReadToken(string token)
     {
         var secretKey = Encoding.UTF8.GetBytes(_jwtSettings.Key);
@@ -72,36 +77,4 @@ public class UserJwtTokenFactory : IUserJwtTokenFactory
         return principal;
     }
 
-    public bool ValidateToken(string token)
-    {
-        var validatedToken = ReadToken(token);
-        return validatedToken != null;
-    }
-
-    private string CreateToken(List<Claim> claims, int expiresTimeMinutes)
-    {
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-
-        var secretKey = Encoding.UTF8.GetBytes(_jwtSettings.Key);
-        var issuerSigningKey = new SymmetricSecurityKey(secretKey);
-
-        var encryptionkey = Encoding.UTF8.GetBytes(_jwtSettings.EncryptionKey);
-        var tokenDecryptionKey = new SymmetricSecurityKey(encryptionkey);
-
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(claims),
-            IssuedAt = DateTime.UtcNow,
-            Expires = DateTime.UtcNow.AddMinutes(expiresTimeMinutes),
-            SigningCredentials = new SigningCredentials(issuerSigningKey, SecurityAlgorithms.HmacSha256Signature),
-            Issuer = _jwtSettings.Issuer,
-            Audience = _jwtSettings.Audience,
-            EncryptingCredentials = new EncryptingCredentials(tokenDecryptionKey,
-                                                            SecurityAlgorithms.Aes256KW,
-                                                            SecurityAlgorithms.Aes256CbcHmacSha512)
-        };
-        var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
-    }
 }

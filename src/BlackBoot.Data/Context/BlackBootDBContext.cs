@@ -1,4 +1,5 @@
 ﻿using BlackBoot.Data.Extensions;
+using BlackBoot.Shared.Extentions;
 
 namespace BlackBoot.Data.Context;
 
@@ -17,6 +18,19 @@ public class BlackBootDBContext : DbContext
     {
         modelBuilder.Entity<User>().HasIndex(x => x.Email).IsUnique();
         modelBuilder.Entity<User>().HasIndex(x => x.WithdrawalWallet).IsUnique();
+        modelBuilder.Entity<User>().HasData(new User
+        {
+            UserId = Guid.NewGuid(),
+            FirstName = "Admin",
+            Email = "Admin@BlackBoot.io",
+            Password = HashGenerator.Hash("Adm!nP@ssw0rd"),
+            Gender = Domain.Enums.Gender.Male,
+            IsActive = true,
+            Nationality = "",
+            RegistrationDate = DateTime.Now,
+
+
+        });
 
         modelBuilder.Entity<Subscription>().HasIndex(x => x.Email).IsUnique();
 

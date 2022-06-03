@@ -53,7 +53,7 @@ public static class ServiceCollectionExtentions
 
                 var token = ((JwtSecurityToken)context.SecurityToken).RawData;
                 var userTokenService = context.HttpContext.RequestServices.GetRequiredService<IUserJwtTokensService>();
-                var userId = context.Principal.Identity.GetUserIdAsGuid();
+                var userId = context?.Principal?.Identity?.GetUserIdAsGuid();
                 if (userId == Guid.Empty)
                 {
                     context.Fail(AppResource.InvalidUser);
@@ -86,24 +86,3 @@ public static class ServiceCollectionExtentions
 }
 
 
-public class RequireEncryptedTokenHandler : JwtSecurityTokenHandler
-{
-    public override ClaimsPrincipal ValidateToken(string token, TokenValidationParameters validationParameters, out SecurityToken validatedToken)
-    {
-        if (string.IsNullOrWhiteSpace(token))
-            throw new ArgumentNullException(nameof(token));
-
-        if (validationParameters == null)
-            throw new ArgumentNullException(nameof(validationParameters));
-
-        if (token.Length > MaximumTokenSizeInBytes)
-            throw new ArgumentException(
-                $"IDX10209: token has length: '{token.Length}' which is larger than the MaximumTokenSizeInBytes: '{MaximumTokenSizeInBytes}'.");
-
-        var strArray = token.Split(new[] { '.' }, 6);
-        if (strArray.Length == 5)
-            return base.ValidateToken(token, validationParameters, out validatedToken);
-
-        throw new SecurityTokenDecryptionFailedException();
-    }
-}
