@@ -18,6 +18,8 @@ public class BlackBootDBContext : DbContext
     {
         modelBuilder.Entity<User>().HasIndex(x => x.Email).IsUnique();
         modelBuilder.Entity<User>().HasIndex(x => x.WithdrawalWallet).IsUnique();
+
+        //TODO: this code will be removed
         modelBuilder.Entity<User>().HasData(new User
         {
             UserId = Guid.NewGuid(),
@@ -28,12 +30,9 @@ public class BlackBootDBContext : DbContext
             IsActive = true,
             Nationality = "",
             RegistrationDate = DateTime.Now,
-
-
         });
 
         modelBuilder.Entity<Subscription>().HasIndex(x => x.Email).IsUnique();
-
         modelBuilder.RegisterAllEntities<IEntity>(typeof(User).Assembly);
     }
 }

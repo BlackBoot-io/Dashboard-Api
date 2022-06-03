@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿#nullable disable
 using Microsoft.Extensions.Configuration;
 
 namespace BlackBoot.Services.Implementations;
@@ -32,9 +32,7 @@ public class UserJwtTokensService : IUserJwtTokensService
     public async Task RevokeUserTokensAsync(Guid userId, string refreshToken, CancellationToken cancellationToken = default)
     {
         if (!string.IsNullOrEmpty(refreshToken))
-        {
             await DeleteTokensWithSameRefreshTokenAsync(userId, refreshToken, cancellationToken);
-        }
         await DeleteExpiredTokensAsync(cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
     }
@@ -49,8 +47,7 @@ public class UserJwtTokensService : IUserJwtTokensService
         if (string.IsNullOrEmpty(refreshToken))
             return null;
 
-        var refreshTokenModel = await _userJwtToken.Where(x => x.RefreshTokenHash == HashGenerator.Hash(refreshToken)).FirstOrDefaultAsync(cancellationToken);
-        return refreshTokenModel;
+        return await _userJwtToken.Where(x => x.RefreshTokenHash == HashGenerator.Hash(refreshToken)).FirstOrDefaultAsync(cancellationToken);
     }
 
     private async Task InvalidateUserTokensAsync(Guid userId, CancellationToken cancellationToken = default)

@@ -1,12 +1,7 @@
-﻿using BlackBoot.Data.Context;
-using BlackBoot.Services.Resources;
-using BlackBoot.Shared.Core;
-using BlackBoot.Shared.Extentions;
+﻿#nullable disable
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 
 namespace BlackBoot.Api.Extentions;
@@ -24,15 +19,14 @@ public static class ServiceCollectionExtentions
     {
         var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
         services.AddAuthorization();
-        services.AddAuthentication(options =>
-        {
-            options.DefaultChallengeScheme = "Bearer";
-            options.DefaultSignInScheme = "Bearer";
-            options.DefaultAuthenticateScheme = "Bearer";
-        })
+        _ = services.AddAuthentication(options =>
+          {
+              options.DefaultChallengeScheme = "Bearer";
+              options.DefaultSignInScheme = "Bearer";
+              options.DefaultAuthenticateScheme = "Bearer";
+          })
         .AddJwtBearer(cfg =>
         {
-
             cfg.RequireHttpsMetadata = false;
             cfg.SaveToken = true;
             cfg.TokenValidationParameters = new TokenValidationParameters
@@ -48,15 +42,15 @@ public static class ServiceCollectionExtentions
                 TokenDecryptionKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.EncryptionKey))
             };
 
-            async Task validate(TokenValidatedContext context)
+            static async Task validate(TokenValidatedContext context)
             {
 
                 var token = ((JwtSecurityToken)context.SecurityToken).RawData;
                 var userTokenService = context.HttpContext.RequestServices.GetRequiredService<IUserJwtTokensService>();
                 var userId = context?.Principal?.Identity?.GetUserIdAsGuid();
-                if (userId == Guid.Empty)
+                if (userId == null || userId == Guid.Empty)
                 {
-                    context.Fail(AppResource.InvalidUser);
+                    context?.Fail(AppResource.InvalidUser);
                     return;
                 }
                 var validate = await userTokenService.VerifyTokenAsync(userId.Value, token, context.HttpContext.RequestAborted);
@@ -66,7 +60,6 @@ public static class ServiceCollectionExtentions
                     return;
                 }
                 context.HttpContext.User = context.Principal;
-
             }
 
             cfg.Events = new JwtBearerEvents
@@ -76,13 +69,7 @@ public static class ServiceCollectionExtentions
                     return validate(context);
                 }
             };
-
-
             cfg.SecurityTokenValidators.Add(new RequireEncryptedTokenHandler());
         });
-
-
     }
 }
-
-

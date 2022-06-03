@@ -1,6 +1,4 @@
-﻿
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
 namespace BlackBoot.Services.Implementations;
@@ -25,11 +23,10 @@ public class AccountService : IAccountService
 
     public async Task<UserTokenDto> LoginAsync(UserLoginDto item, CancellationToken cancellationToken = default)
     {
-
         var user = await _usersservice.GetByEmailAsync(item.Email, cancellationToken);
         if (user == null) throw new NotFoundException(AppResource.InvalidUser);
 
-        var checkPasswordResult = await _usersservice.CheckPasswordAsync(user, item.Password, cancellationToken);
+        var checkPasswordResult = _usersservice.CheckPassword(user, item.Password, cancellationToken);
         if (!checkPasswordResult) throw new NotFoundException(AppResource.InvalidUser);
 
         var usertokens = await GenerateTokenAsync(user.UserId);

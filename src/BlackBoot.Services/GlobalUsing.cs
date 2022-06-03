@@ -6,3 +6,4 @@ global using BlackBoot.Services.Interfaces;
 global using BlackBoot.Services.Resources;
 global using BlackBoot.Shared.Core;
 global using BlackBoot.Shared.Extentions;
+global using Microsoft.EntityFrameworkCore;

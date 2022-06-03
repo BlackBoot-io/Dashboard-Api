@@ -5,8 +5,6 @@ namespace BlackBoot.Shared.Extentions;
 
 public static class HashGenerator
 {
-
-
     public static string Hash(string key)
     {
         string s = "Bl@ckb00t";

@@ -1,4 +1,4 @@
-﻿using BlackBoot.Shared.Core;
+﻿#nullable disable
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
 using System.Text.Encodings.Web;
@@ -23,7 +23,7 @@ public class ExceptionHandlerMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-        string message = null;
+        string message = String.Empty;
         HttpStatusCode httpStatusCode = HttpStatusCode.InternalServerError;
         ApiResultStatusCode apiStatusCode = ApiResultStatusCode.ServerError;
 
