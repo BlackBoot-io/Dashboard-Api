@@ -44,12 +44,12 @@ public class ExceptionHandlerMiddleware
                     ["Exception"] = exception.Message,
                     ["StackTrace"] = exception.StackTrace,
                 };
-                if (exception.InnerException != null)
+                if (exception.InnerException is not null)
                 {
                     dic.Add("InnerException.Exception", exception.InnerException.Message);
                     dic.Add("InnerException.StackTrace", exception.InnerException.StackTrace);
                 }
-                if (exception.AdditionalData != null)
+                if (exception.AdditionalData is not null)
                     dic.Add("AdditionalData", JsonSerializer.Serialize(exception.AdditionalData, new JsonSerializerOptions
                     {
                         WriteIndented = true,
@@ -86,7 +86,7 @@ public class ExceptionHandlerMiddleware
 
             if (_env.IsDevelopment())
             {
-                var dic = new Dictionary<string, string>
+                Dictionary<string, string> dic = new()
                 {
                     ["Exception"] = exception.Message,
                     ["StackTrace"] = exception.StackTrace,
@@ -116,7 +116,7 @@ public class ExceptionHandlerMiddleware
 
             if (_env.IsDevelopment())
             {
-                var dic = new Dictionary<string, string>
+                Dictionary<string, string> dic = new()
                 {
                     ["Exception"] = exception.Message,
                     ["StackTrace"] = exception.StackTrace
