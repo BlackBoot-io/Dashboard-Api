@@ -198,11 +198,11 @@ namespace BlackBoot.Data.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(128)");
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("FullName")
                         .IsRequired()
-                        .HasMaxLength(50)
+                        .HasMaxLength(150)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("varchar(150)");
 
                     b.Property<byte>("Gender")
                         .HasColumnType("tinyint");
@@ -244,14 +244,14 @@ namespace BlackBoot.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("9f3ba00e-85de-40c5-9d7a-d8192acad0ba"),
+                            UserId = new Guid("10d714b5-eaca-4eda-842c-f4b6bc9ceb97"),
                             Email = "Admin@BlackBoot.io",
-                            FirstName = "Admin",
+                            FullName = "Admin",
                             Gender = (byte)1,
                             IsActive = true,
                             Nationality = "",
                             Password = "SELEtxzRpGEVskq+ddvHykdlDA2P8hB/2UHoo0uquvc=",
-                            RegistrationDate = new DateTime(2022, 6, 3, 14, 23, 39, 824, DateTimeKind.Local).AddTicks(4727)
+                            RegistrationDate = new DateTime(2022, 6, 4, 20, 46, 44, 148, DateTimeKind.Local).AddTicks(7797)
                         });
                 });
 
@@ -347,11 +347,11 @@ namespace BlackBoot.Data.Migrations
 
             modelBuilder.Entity("BlackBoot.Domain.Entities.UserJwtToken", b =>
                 {
-                    b.HasOne("BlackBoot.Domain.Entities.User", "UserFk")
+                    b.HasOne("BlackBoot.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.Navigation("UserFk");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BlackBoot.Domain.Entities.WalletPool", b =>

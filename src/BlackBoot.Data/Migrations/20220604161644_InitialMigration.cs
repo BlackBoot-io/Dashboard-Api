@@ -61,7 +61,7 @@ namespace BlackBoot.Data.Migrations
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     Gender = table.Column<byte>(type: "tinyint", nullable: false),
-                    FirstName = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
+                    FullName = table.Column<string>(type: "varchar(150)", unicode: false, maxLength: 150, nullable: false),
                     Nationality = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     Email = table.Column<string>(type: "varchar(128)", unicode: false, maxLength: 128, nullable: false),
                     Password = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: false),
@@ -181,6 +181,12 @@ namespace BlackBoot.Data.Migrations
                         principalTable: "User",
                         principalColumn: "UserId");
                 });
+
+            migrationBuilder.InsertData(
+                schema: "Base",
+                table: "User",
+                columns: new[] { "UserId", "Email", "FullName", "Gender", "IsActive", "Nationality", "Password", "RegistrationDate", "WithdrawalWallet" },
+                values: new object[] { new Guid("10d714b5-eaca-4eda-842c-f4b6bc9ceb97"), "Admin@BlackBoot.io", "Admin", (byte)1, true, "", "SELEtxzRpGEVskq+ddvHykdlDA2P8hB/2UHoo0uquvc=", new DateTime(2022, 6, 4, 20, 46, 44, 148, DateTimeKind.Local).AddTicks(7797), null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notification_UserId",
