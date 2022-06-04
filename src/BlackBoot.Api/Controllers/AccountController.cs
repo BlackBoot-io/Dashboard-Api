@@ -4,10 +4,7 @@ public class AccountController : BaseController
 {
     private readonly IAccountService _accountService;
 
-    public AccountController(IAccountService accountService)
-    {
-        _accountService = accountService;
-    }
+    public AccountController(IAccountService accountService) => _accountService = accountService;
 
     [HttpPost, AllowAnonymous]
     public async Task<ActionResult<UserTokenDto>> LoginAsync(UserLoginDto userLoginDto, CancellationToken cancellationToken) => Ok(await _accountService.LoginAsync(userLoginDto, cancellationToken));
