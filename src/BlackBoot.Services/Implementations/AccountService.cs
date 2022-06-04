@@ -78,7 +78,7 @@ public class AccountService : IAccountService
             AccessToken = accessToken.Token,
             AccessTokenExpireTime = DateTimeOffset.UtcNow.AddMinutes(accessToken.TokenExpirationMinutes),
             RefreshToken = refreshToken.Token,
-            RefreshTokenExpireTime = DateTimeOffset.UtcNow.AddMinutes(accessToken.TokenExpirationMinutes)
+            RefreshTokenExpireTime = DateTimeOffset.UtcNow.AddMinutes(refreshToken.TokenExpirationMinutes)
         };
 
         return result;
