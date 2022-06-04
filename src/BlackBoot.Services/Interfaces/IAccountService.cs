@@ -1,6 +1,6 @@
 ﻿namespace BlackBoot.Services.Interfaces;
 
-public interface IAccountService : ITransientDependency
+public interface IAccountService : IScopedDependency
 {
     Task<UserTokenDto> LoginAsync(UserLoginDto userLoginDto, CancellationToken cancellationToken = default);
     Task<UserTokenDto> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);

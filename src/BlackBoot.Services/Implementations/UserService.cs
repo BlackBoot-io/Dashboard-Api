@@ -1,11 +1,11 @@
 ﻿#nullable disable
 namespace BlackBoot.Services.Implementations;
 
-public class UsersService : IUsersService
+public class UserService : IUserService
 {
     private readonly DbSet<User> _users;
 
-    public UsersService(BlackBootDBContext context)
+    public UserService(BlackBootDBContext context)
     {
         _users = context.Set<User>();
     }

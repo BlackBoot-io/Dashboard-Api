@@ -6,12 +6,12 @@ namespace BlackBoot.Services.Implementations;
 public class AccountService : IAccountService
 {
 
-    private readonly IUsersService _usersservice;
-    private readonly IUserJwtTokensService _userTokensService;
+    private readonly IUserService _usersservice;
+    private readonly IUserJwtTokenService _userTokensService;
     private readonly IJwtTokenFactory _userTokenFactoryService;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    public AccountService(IUsersService usersservice,
-                          IUserJwtTokensService userTokensService,
+    public AccountService(IUserService usersservice,
+                          IUserJwtTokenService userTokensService,
                           IJwtTokenFactory userTokenFactoryService,
                           IHttpContextAccessor httpContextAccessor)
     {

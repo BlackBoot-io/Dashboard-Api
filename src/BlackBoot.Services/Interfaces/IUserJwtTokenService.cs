@@ -1,6 +1,6 @@
 ﻿namespace BlackBoot.Services.Interfaces;
 
-public interface IUserJwtTokensService : ITransientDependency
+public interface IUserJwtTokenService : IScopedDependency
 {
     Task AddUserTokenAsync(Guid userId, string accessToken, string refreshToken, CancellationToken cancellationToken = default);
     Task RevokeUserTokensAsync(Guid userId, string refreshToken, CancellationToken cancellationToken = default);

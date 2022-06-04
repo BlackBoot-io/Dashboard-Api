@@ -3,12 +3,12 @@ using Microsoft.Extensions.Configuration;
 
 namespace BlackBoot.Services.Implementations;
 
-public class UserJwtTokensService : IUserJwtTokensService
+public class UserJwtTokenService : IUserJwtTokenService
 {
     private readonly JwtSettings _jwtSettings;
     private readonly BlackBootDBContext _context;
     private readonly DbSet<UserJwtToken> _userJwtToken;
-    public UserJwtTokensService(BlackBootDBContext context, IConfiguration configuration)
+    public UserJwtTokenService(BlackBootDBContext context, IConfiguration configuration)
     {
         _jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
         _context = context;

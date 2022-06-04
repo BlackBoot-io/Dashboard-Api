@@ -46,7 +46,7 @@ public static class ServiceCollectionExtentions
             {
 
                 var token = ((JwtSecurityToken)context.SecurityToken).RawData;
-                var userTokenService = context.HttpContext.RequestServices.GetRequiredService<IUserJwtTokensService>();
+                var userTokenService = context.HttpContext.RequestServices.GetRequiredService<IUserJwtTokenService>();
                 var userId = context?.Principal?.Identity?.GetUserIdAsGuid();
                 if (userId == null || userId == Guid.Empty)
                 {
