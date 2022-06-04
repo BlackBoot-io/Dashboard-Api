@@ -60,7 +60,7 @@ public class AccountService : IAccountService
         return new UserDto
         {
             Email = user.Email,
-            FirstName = user.FirstName,
+            FullName = user.FullName,
             Gender = user.Gender,
             Nationality = user.Nationality,
         };
@@ -88,9 +88,9 @@ public class AccountService : IAccountService
             User = new UserDto
             {
                 Email = user.Email,
-                FirstName = user.FirstName,
+                FullName = user.FullName,
                 Gender = user.Gender,
-                Nationality = user.Nationality,
+                Nationality = user.Nationality
             }
         };
 

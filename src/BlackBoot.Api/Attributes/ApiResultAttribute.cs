@@ -1,4 +1,4 @@
-﻿using BlackBoot.Shared.Core;
+﻿#nullable disable
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Text.Json;
 
@@ -32,18 +32,18 @@ public class ApiResultAttribute : ActionFilterAttribute
                     var errorMessages2 = errors.Select(p => new { Key = p.Key, Value = p.Value }).Distinct();
                     message = JsonSerializer.Serialize(errorMessages2); //string.Join(" | ", errorMessages2);
                     break;
-                case var value when value != null && !(value is ProblemDetails):
+                case var value when value != null && value is not ProblemDetails:
                     message = badRequestObjectResult.Value.ToString();
                     break;
             }
 
-            var apiResult = new ApiResult(false, ApiResultStatusCode.BadRequest, message);
+            ApiResult apiResult = new(false, ApiResultStatusCode.BadRequest, message);
             context.Result = new JsonResult(apiResult) { StatusCode = badRequestObjectResult.StatusCode };
         }
         else if (context.Result is ObjectResult notFoundObjectResult && notFoundObjectResult.StatusCode == 404)
         {
             string message = null;
-            if (notFoundObjectResult.Value != null && !(notFoundObjectResult.Value is ProblemDetails))
+            if (notFoundObjectResult.Value != null && notFoundObjectResult.Value is not ProblemDetails)
                 message = notFoundObjectResult.Value.ToString();
 
             //var apiResult = new ApiResult<object>(false, ApiResultStatusCode.NotFound, notFoundObjectResult.Value);
@@ -55,7 +55,7 @@ public class ApiResultAttribute : ActionFilterAttribute
             var apiResult = new ApiResult(true, ApiResultStatusCode.Success, contentResult.Content);
             context.Result = new JsonResult(apiResult) { StatusCode = contentResult.StatusCode };
         }
-        else if (context.Result is ObjectResult objectResult && objectResult.StatusCode == null && !(objectResult.Value is ApiResult))
+        else if (context.Result is ObjectResult objectResult && objectResult.StatusCode == null && objectResult.Value is not ApiResult)
         {
             var apiResult = new ApiResult<object>(true, ApiResultStatusCode.Success, objectResult.Value);
             context.Result = new JsonResult(apiResult) { StatusCode = objectResult.StatusCode };

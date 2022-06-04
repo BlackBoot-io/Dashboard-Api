@@ -10,8 +10,8 @@ public class User : IEntity
 
     public Gender Gender { get; set; }
 
-    [Required, MaxLength(50)]
-    public string FirstName { get; set; } = null!;
+    [Required, MaxLength(150)]
+    public string FullName { get; set; } = null!;
 
     [Required, MaxLength(20)]
     public string Nationality { get; set; } = null!;
