@@ -4,7 +4,7 @@ using BlackBoot.Domain.Entities;
 
 namespace BlackBoot.Api.Controllers;
 
-[AllowAnonymous]
+
 public class CrowdSaleScheduleController : BaseController
 {
     private readonly ICrowdSaleScheduleService _crowdSaleScheduleService;
