@@ -8,11 +8,11 @@ public class AccountService : IAccountService
 
     private readonly IUsersService _usersservice;
     private readonly IUserJwtTokensService _userTokensService;
-    private readonly IUserJwtTokenFactory _userTokenFactoryService;
+    private readonly IJwtTokenFactory _userTokenFactoryService;
     private readonly IHttpContextAccessor _httpContextAccessor;
     public AccountService(IUsersService usersservice,
                           IUserJwtTokensService userTokensService,
-                          IUserJwtTokenFactory userTokenFactoryService,
+                          IJwtTokenFactory userTokenFactoryService,
                           IHttpContextAccessor httpContextAccessor)
     {
         _usersservice = usersservice;
@@ -57,7 +57,13 @@ public class AccountService : IAccountService
         if (userId is null)
             throw new BadRequestException(AppResource.InvalidUser);
         var user = await _usersservice.GetAsync(userId.Value, cancellationToken);
-        return new UserDto { };
+        return new UserDto
+        {
+            Email = user.Email,
+            FirstName = user.FirstName,
+            Gender = user.Gender,
+            Nationality = user.Nationality,
+        };
     }
     private async Task<UserTokenDto> GenerateTokenAsync(Guid userId)
     {
@@ -78,7 +84,14 @@ public class AccountService : IAccountService
             AccessToken = accessToken.Token,
             AccessTokenExpireTime = DateTimeOffset.UtcNow.AddMinutes(accessToken.TokenExpirationMinutes),
             RefreshToken = refreshToken.Token,
-            RefreshTokenExpireTime = DateTimeOffset.UtcNow.AddMinutes(refreshToken.TokenExpirationMinutes)
+            RefreshTokenExpireTime = DateTimeOffset.UtcNow.AddMinutes(refreshToken.TokenExpirationMinutes),
+            User = new UserDto
+            {
+                Email = user.Email,
+                FirstName = user.FirstName,
+                Gender = user.Gender,
+                Nationality = user.Nationality,
+            }
         };
 
         return result;

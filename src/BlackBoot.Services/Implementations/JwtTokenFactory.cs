@@ -6,10 +6,10 @@ using System.Text;
 
 namespace BlackBoot.Services.Implementations;
 
-public class UserJwtTokenFactory : IUserJwtTokenFactory
+public class JwtTokenFactory : IJwtTokenFactory
 {
     private readonly JwtSettings _jwtSettings;
-    public UserJwtTokenFactory(IConfiguration configuration)
+    public JwtTokenFactory(IConfiguration configuration)
     {
         _jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
     }
@@ -20,7 +20,7 @@ public class UserJwtTokenFactory : IUserJwtTokenFactory
         {
             JwtTokenType.AccessToken => _jwtSettings.AccessTokenExpirationMinutes,
             JwtTokenType.RefreshToken => _jwtSettings.RefreshTokenExpirationMinutes,
-            _ => throw new ArgumentOutOfRangeException(nameof(tokenType), $"Not expected direction value: {tokenType}"),
+            _ => throw new ArgumentOutOfRangeException(nameof(tokenType), $"Not expected tokenType value: {tokenType}"),
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();

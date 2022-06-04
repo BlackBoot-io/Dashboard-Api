@@ -2,7 +2,7 @@
 
 namespace BlackBoot.Services.Interfaces;
 
-public interface IUserJwtTokenFactory : ITransientDependency
+public interface IJwtTokenFactory : ITransientDependency
 {
     (string Token, int TokenExpirationMinutes) CreateToken(List<Claim> claims, JwtTokenType tokenType);
     ClaimsPrincipal ReadToken(string token);
