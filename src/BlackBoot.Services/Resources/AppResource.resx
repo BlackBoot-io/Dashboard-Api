@@ -117,7 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CrowdSaleEnded" xml:space="preserve">
+    <value>Sorry! We reach to out investment goal. Please check your email for further investment phase.</value>
+  </data>
   <data name="InvalidUser" xml:space="preserve">
     <value>InvalidUser</value>
+  </data>
+  <data name="TransactionFailed" xml:space="preserve">
+    <value>Current Transaction is failed! Please try again later.</value>
   </data>
 </root>

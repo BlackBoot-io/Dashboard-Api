@@ -3,6 +3,8 @@ namespace BlackBoot.Services.Interfaces;
 
 public interface ITransactionService : IScopedDependency
 {
-
-
+    Task<IActionResponse<TransactionDto>> Add(Transaction trx);
+    Task<IActionResponse<Transaction>> Update(Transaction model);
+    Task<IActionResponse<IEnumerable<Transaction>>> GetAll(Guid userid);
+    Task<IActionResponse<int>> GetUserBalance(Guid userid);
 }

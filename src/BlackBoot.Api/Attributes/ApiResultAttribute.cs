@@ -9,13 +9,15 @@ public class ApiResultAttribute : ActionFilterAttribute
     public override void OnResultExecuting(ResultExecutingContext context)
     {
         if (context.Result is OkObjectResult okObjectResult && okObjectResult.Value is ActionResponse result)
-        {
-            context.Result = new JsonResult(result) { StatusCode = (int)result.StatusCode };
-        }
+            context.Result = new JsonResult(result)
+            {
+                StatusCode = (int)result.StatusCode
+            };
         else if (context.Result is OkResult okResult)
-        {
-            context.Result = new JsonResult(new ActionResponse()) { StatusCode = okResult.StatusCode };
-        }
+            context.Result = new JsonResult(new ActionResponse())
+            {
+                StatusCode = okResult.StatusCode
+            };
         else if (context.Result is ObjectResult badRequestObjectResult && badRequestObjectResult.StatusCode == 400)
         {
             string message = null;

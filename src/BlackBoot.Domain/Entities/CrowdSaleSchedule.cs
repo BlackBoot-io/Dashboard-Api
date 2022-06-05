@@ -19,15 +19,21 @@ public class CrowdSaleSchedule : IEntity
 
     public int MinimumBuy { get; set; }
 
+    public int CurrentInvestment { get; set; }
+
     public int InvestmentGoal { get; set; }
 
     public int BonusCount { get; set; }
 
     public decimal Price { get; set; }
 
+    public decimal CurrentIncreaseRate { get; set; }
+
     [MaxLength(500)]
     public string Description { get; set; }
 
     [NotMapped]
     public int PeriodDay => (From - To).Days;
+
+    public bool InvestmentIsAvailable() => From <= DateTime.Now && InvestmentGoal > CurrentInvestment;
 }
