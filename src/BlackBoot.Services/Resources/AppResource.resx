@@ -123,6 +123,15 @@
   <data name="InvalidUser" xml:space="preserve">
     <value>InvalidUser</value>
   </data>
+  <data name="NewAndConfirmPasswordsDoNotMatch" xml:space="preserve">
+    <value>NewAndConfirmPasswordsDoNotMatch</value>
+  </data>
+  <data name="PreviousPasswordsDoNotMatch" xml:space="preserve">
+    <value>PreviousPasswordsDoNotMatch</value>
+  </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>UserNotFound</value>
+  </data>
   <data name="TransactionFailed" xml:space="preserve">
     <value>Current Transaction is failed! Please try again later.</value>
   </data>

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlackBoot.Data.Migrations
 {
     [DbContext(typeof(BlackBootDBContext))]
-    [Migration("20220605104720_Add-IsImportant-Notiification")]
-    partial class AddIsImportantNotiification
+    [Migration("20220605125646_IntialMigration")]
+    partial class IntialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -197,6 +197,9 @@ namespace BlackBoot.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("BirthdayDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(128)
@@ -249,14 +252,14 @@ namespace BlackBoot.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("b3e3963a-818d-4f1e-a55d-f058c201f74d"),
+                            UserId = new Guid("c41d18f0-1c4c-4123-b703-64d167d707b4"),
                             Email = "Admin@BlackBoot.io",
                             FullName = "Admin",
                             Gender = (byte)1,
                             IsActive = true,
                             Nationality = "",
                             Password = "SELEtxzRpGEVskq+ddvHykdlDA2P8hB/2UHoo0uquvc=",
-                            RegistrationDate = new DateTime(2022, 6, 5, 15, 17, 20, 749, DateTimeKind.Local).AddTicks(9924)
+                            RegistrationDate = new DateTime(2022, 6, 5, 17, 26, 46, 365, DateTimeKind.Local).AddTicks(3595)
                         });
                 });
 

@@ -66,6 +66,45 @@ public class AccountService : IAccountService
             Nationality = user.Data.Nationality,
         });
     }
+    public async Task<IActionResponse<bool>> UpdateProfileAsync(UserDto userDto, CancellationToken cancellationToken = default)
+    {
+        var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.GetUserIdAsGuid();
+        if (userId is null)
+            return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.InvalidUser);
+        var userResponse = await _userService.GetAsync(userId.Value, cancellationToken);
+        var user = userResponse.Data;
+        if (user == null) return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.InvalidUser);
+
+        #region Update Profile
+        user.Email = userDto.Email;
+        user.FullName = userDto.FullName;
+        user.Gender = userDto.Gender;
+        user.Nationality = userDto.Nationality;
+        user.BirthdayDate = userDto.BirthdayDate;
+        #endregion
+
+        return await _userService.UpdateAsync(user, cancellationToken);
+    }
+    public async Task<IActionResponse<bool>> ChangePassword(UserChangePasswordDto userChangePasswordDto, CancellationToken cancellationToken = default)
+    {
+        if (userChangePasswordDto.ConfirmPassword != userChangePasswordDto.NewPassword)
+            return new ActionResponse<bool>(ActionResponseStatusCode.BadRequest, AppResource.NewAndConfirmPasswordsDoNotMatch);
+
+        var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.GetUserIdAsGuid();
+        if (userId is null) return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
+
+        var userGetResponse = await _userService.GetAsync(userId.Value, cancellationToken);
+        var user = userGetResponse.Data;
+        if (user == null) return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
+
+        if (HashGenerator.Hash(userChangePasswordDto.OldPassword) != user.Password)
+            return new ActionResponse<bool>(ActionResponseStatusCode.Forbidden, AppResource.PreviousPasswordsDoNotMatch);
+
+        var hashedNewPassword = HashGenerator.Hash(userChangePasswordDto.NewPassword);
+        user.Password = hashedNewPassword;
+
+        return await _userService.UpdateAsync(user, cancellationToken);
+    }
     private async Task<UserTokenDto> GenerateTokenAsync(Guid userId, CancellationToken cancellationToken)
     {
         var user = await _userService.GetAsync(userId, cancellationToken);
@@ -80,7 +119,7 @@ public class AccountService : IAccountService
                new Claim("AccessToken",accessToken.Data.Token)
 
             }, JwtTokenType.RefreshToken);
-        var result = new UserTokenDto()
+        UserTokenDto result = new ()
         {
             AccessToken = accessToken.Data.Token,
             AccessTokenExpireTime = DateTimeOffset.UtcNow.AddMinutes(accessToken.Data.TokenExpirationMinutes),
@@ -96,5 +135,20 @@ public class AccountService : IAccountService
         };
 
         return result;
+    }
+
+    public async Task<IApiResult<UserTokenDto>> SignupAsync(User user, CancellationToken cancellationToken = default)
+    {
+        //user.Password = HashGenerator.Hash(user.Password);
+
+        //user = await _usersService.AddAsync(user, cancellationToken);
+
+        //var usertokens = await GenerateTokenAsync(user.UserId);
+        //await _userTokensService.AddUserTokenAsync(user.UserId, usertokens.AccessToken, usertokens.RefreshToken, cancellationToken);
+
+        //ApiResult<UserTokenDto> reaponse = new(true, ApiResultStatusCode.Success , usertokens);
+
+        //return reaponse;
+        return null; ;
     }
 }
