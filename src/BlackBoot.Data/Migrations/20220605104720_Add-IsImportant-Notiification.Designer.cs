@@ -4,6 +4,7 @@ using BlackBoot.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlackBoot.Data.Migrations
 {
     [DbContext(typeof(BlackBootDBContext))]
-    partial class BlackBootDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220605104720_Add-IsImportant-Notiification")]
+    partial class AddIsImportantNotiification
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -195,9 +197,6 @@ namespace BlackBoot.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("BirthdayDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(128)
@@ -250,8 +249,7 @@ namespace BlackBoot.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("d0a569cf-aa3d-4631-a365-cf4693441ba3"),
-                            BirthdayDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = new Guid("b3e3963a-818d-4f1e-a55d-f058c201f74d"),
                             Email = "Admin@BlackBoot.io",
                             FullName = "Admin",
                             Gender = (byte)1,
