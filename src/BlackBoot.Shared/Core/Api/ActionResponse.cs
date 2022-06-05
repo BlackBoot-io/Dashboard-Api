@@ -16,6 +16,7 @@ public interface IActionResponse<TData> : IActionResponse
     public TData Data { get; set; }
 }
 
+
 public class ActionResponse : IActionResponse
 {
 
@@ -30,10 +31,6 @@ public class ActionResponse : IActionResponse
         IsSuccess = statusCode switch
         {
             ActionResponseStatusCode.Success => true,
-            ActionResponseStatusCode.NotFound => false,
-            ActionResponseStatusCode.ServerError => false,
-            ActionResponseStatusCode.BadRequest => false,
-            ActionResponseStatusCode.UnAuthorized => false,
             _ => false
         };
         StatusCode = statusCode;
@@ -44,10 +41,6 @@ public class ActionResponse : IActionResponse
         IsSuccess = statusCode switch
         {
             ActionResponseStatusCode.Success => true,
-            ActionResponseStatusCode.NotFound => false,
-            ActionResponseStatusCode.ServerError => false,
-            ActionResponseStatusCode.BadRequest => false,
-            ActionResponseStatusCode.UnAuthorized => false,
             _ => false
         };
         StatusCode = statusCode;
@@ -59,9 +52,9 @@ public class ActionResponse : IActionResponse
     public ActionResponseStatusCode StatusCode { get; set; }
     public string Message { get; set; }
     #region Implicit Operators
-    public static implicit operator ActionResponse(OkResult result) => new ActionResponse(ActionResponseStatusCode.Success);
+    public static implicit operator ActionResponse(OkResult result) => new(ActionResponseStatusCode.Success);
 
-    public static implicit operator ActionResponse(BadRequestResult result) => new ActionResponse(ActionResponseStatusCode.BadRequest);
+    public static implicit operator ActionResponse(BadRequestResult result) => new(ActionResponseStatusCode.BadRequest);
 
     public static implicit operator ActionResponse(BadRequestObjectResult result)
     {
@@ -74,19 +67,17 @@ public class ActionResponse : IActionResponse
         return new ActionResponse(ActionResponseStatusCode.BadRequest, message);
     }
 
-    public static implicit operator ActionResponse(ContentResult result) => new ActionResponse(ActionResponseStatusCode.Success, result.Content);
-    public static implicit operator ActionResponse(NotFoundResult result) => new ActionResponse(ActionResponseStatusCode.NotFound);
+    public static implicit operator ActionResponse(ContentResult result) => new(ActionResponseStatusCode.Success, result.Content);
+    public static implicit operator ActionResponse(NotFoundResult result) => new(ActionResponseStatusCode.NotFound);
 
     #endregion
 
-    public string GetDisplayName(Enum value)
+    public static string GetDisplayName(Enum value)
     {
-        //Assert.NotNull(value, nameof(value));
-
         var attribute = value.GetType().GetField(value.ToString())
             .GetCustomAttributes<DisplayAttribute>(false).FirstOrDefault();
 
-        if (attribute == null)
+        if (attribute is null)
             return value.ToString();
 
         var propValue = attribute.GetType().GetProperty("Name").GetValue(attribute, null);
@@ -106,10 +97,10 @@ public class ActionResponse<TData> : ActionResponse, IActionResponse<TData>
 
 
     #region Implicit Operators
-    public static implicit operator ActionResponse<TData>(TData data) => new ActionResponse<TData>(ActionResponseStatusCode.Success, data);
-    public static implicit operator ActionResponse<TData>(OkResult result) => new ActionResponse<TData>(ActionResponseStatusCode.Success);
-    public static implicit operator ActionResponse<TData>(OkObjectResult result) => new ActionResponse<TData>(ActionResponseStatusCode.Success, (TData)result.Value);
-    public static implicit operator ActionResponse<TData>(BadRequestResult result) => new ActionResponse<TData>(ActionResponseStatusCode.BadRequest);
+    public static implicit operator ActionResponse<TData>(TData data) => new(ActionResponseStatusCode.Success, data);
+    public static implicit operator ActionResponse<TData>(OkResult result) => new(ActionResponseStatusCode.Success);
+    public static implicit operator ActionResponse<TData>(OkObjectResult result) => new(ActionResponseStatusCode.Success, (TData)result.Value);
+    public static implicit operator ActionResponse<TData>(BadRequestResult result) => new(ActionResponseStatusCode.BadRequest);
     public static implicit operator ActionResponse<TData>(BadRequestObjectResult result)
     {
         var message = result.Value?.ToString();
@@ -120,9 +111,9 @@ public class ActionResponse<TData> : ActionResponse, IActionResponse<TData>
         }
         return new ActionResponse<TData>(ActionResponseStatusCode.BadRequest, message);
     }
-    public static implicit operator ActionResponse<TData>(ContentResult result) => new ActionResponse<TData>(ActionResponseStatusCode.Success, result.Content);
-    public static implicit operator ActionResponse<TData>(NotFoundResult result) => new ActionResponse<TData>(ActionResponseStatusCode.NotFound);
-    public static implicit operator ActionResponse<TData>(NotFoundObjectResult result) => new ActionResponse<TData>(ActionResponseStatusCode.NotFound, (TData)result.Value);
+    public static implicit operator ActionResponse<TData>(ContentResult result) => new (ActionResponseStatusCode.Success, result.Content);
+    public static implicit operator ActionResponse<TData>(NotFoundResult result) => new (ActionResponseStatusCode.NotFound);
+    public static implicit operator ActionResponse<TData>(NotFoundObjectResult result) => new (ActionResponseStatusCode.NotFound, (TData)result.Value);
 
     #endregion
 }

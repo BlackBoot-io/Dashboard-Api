@@ -1,8 +1,8 @@
-﻿namespace BlackBoot.Shared.Core;
+﻿#nullable disable
+namespace BlackBoot.Shared.Core;
 
 public class JwtSettings
 {
-
     public string Key { set; get; }
     public string EncryptionKey { set; get; }
     public string Issuer { set; get; }

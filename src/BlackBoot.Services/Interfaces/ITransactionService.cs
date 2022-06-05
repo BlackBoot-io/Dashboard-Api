@@ -4,5 +4,5 @@ namespace BlackBoot.Services.Interfaces;
 public interface ITransactionService : IScopedDependency
 {
 
-}
 
+}

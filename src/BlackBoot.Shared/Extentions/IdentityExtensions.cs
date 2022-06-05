@@ -20,7 +20,7 @@ public static class IdentityExtensions
 
     public static Guid? GetUserIdAsGuid(this IIdentity identity)
     {
-        Guid.TryParse(identity?.FindFirstValue(ClaimTypes.NameIdentifier), out var id);
+        _ = Guid.TryParse(identity?.FindFirstValue(ClaimTypes.NameIdentifier), out var id);
         return id == new Guid() ? null : id;
     }
 
@@ -29,7 +29,7 @@ public static class IdentityExtensions
         var userId = identity?.GetUserId();
         return userId.HasValue()
             ? (T)Convert.ChangeType(userId, typeof(T), CultureInfo.InvariantCulture)
-            : default(T);
+            : default;
     }
     public static string GetUserName(this IIdentity identity) => identity.FindFirstValue(ClaimTypes.Name);
 }
