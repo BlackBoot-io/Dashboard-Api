@@ -36,4 +36,6 @@ public class CrowdSaleSchedule : IEntity
     public int PeriodDay => (From - To).Days;
 
     public bool InvestmentIsAvailable() => From <= DateTime.Now && InvestmentGoal > CurrentInvestment;
+
+    public ICollection<Transaction> Transactions { get; set; }
 }

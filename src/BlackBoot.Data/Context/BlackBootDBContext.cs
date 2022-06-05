@@ -30,6 +30,7 @@ public class BlackBootDBContext : DbContext
             IsActive = true,
             Nationality = "",
             RegistrationDate = DateTime.Now,
+            BirthdayDate = DateTime.Now,
         });
 
         modelBuilder.Entity<Subscription>().HasIndex(x => x.Email).IsUnique();

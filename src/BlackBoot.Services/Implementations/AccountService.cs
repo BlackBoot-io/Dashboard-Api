@@ -137,7 +137,7 @@ public class AccountService : IAccountService
         return result;
     }
 
-    public async Task<IApiResult<UserTokenDto>> SignupAsync(User user, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse<UserTokenDto>> SignupAsync(User user, CancellationToken cancellationToken = default)
     {
         //user.Password = HashGenerator.Hash(user.Password);
 
