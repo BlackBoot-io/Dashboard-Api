@@ -6,7 +6,7 @@ namespace BlackBoot.Services.Implementations;
 public class AccountService : IAccountService
 {
 
-    private readonly IUsersService _usersservice;
+    private readonly IUsersService _usersService;
     private readonly IUserJwtTokensService _userTokensService;
     private readonly IUserJwtTokenFactory _userTokenFactoryService;
     private readonly IHttpContextAccessor _httpContextAccessor;
@@ -15,7 +15,7 @@ public class AccountService : IAccountService
                           IUserJwtTokenFactory userTokenFactoryService,
                           IHttpContextAccessor httpContextAccessor)
     {
-        _usersservice = usersservice;
+        _usersService = usersservice;
         _userTokensService = userTokensService;
         _userTokenFactoryService = userTokenFactoryService;
         _httpContextAccessor = httpContextAccessor;
@@ -23,10 +23,10 @@ public class AccountService : IAccountService
 
     public async Task<UserTokenDto> LoginAsync(UserLoginDto item, CancellationToken cancellationToken = default)
     {
-        var user = await _usersservice.GetByEmailAsync(item.Email, cancellationToken);
+        var user = await _usersService.GetByEmailAsync(item.Email, cancellationToken);
         if (user == null) throw new NotFoundException(AppResource.InvalidUser);
 
-        var checkPasswordResult = _usersservice.CheckPassword(user, item.Password, cancellationToken);
+        var checkPasswordResult = _usersService.CheckPassword(user, item.Password, cancellationToken);
         if (!checkPasswordResult) throw new NotFoundException(AppResource.InvalidUser);
 
         var usertokens = await GenerateTokenAsync(user.UserId);
@@ -56,12 +56,12 @@ public class AccountService : IAccountService
         var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.GetUserIdAsGuid();
         if (userId is null)
             throw new BadRequestException(AppResource.InvalidUser);
-        var user = await _usersservice.GetAsync(userId.Value, cancellationToken);
+        var user = await _usersService.GetAsync(userId.Value, cancellationToken);
         return new UserDto { };
     }
     private async Task<UserTokenDto> GenerateTokenAsync(Guid userId)
     {
-        var user = await _usersservice.GetAsync(userId, default);
+        var user = await _usersService.GetAsync(userId, default);
         var accessToken = _userTokenFactoryService.CreateToken(new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier,user.UserId.ToString()),
@@ -73,7 +73,7 @@ public class AccountService : IAccountService
                new Claim("AccessToken",accessToken.Token)
 
             }, JwtTokenType.RefreshToken);
-        var result = new UserTokenDto()
+        UserTokenDto result = new ()
         {
             AccessToken = accessToken.Token,
             AccessTokenExpireTime = DateTimeOffset.UtcNow.AddMinutes(accessToken.TokenExpirationMinutes),
@@ -82,5 +82,20 @@ public class AccountService : IAccountService
         };
 
         return result;
+    }
+
+    public async Task<IApiResult<UserTokenDto>> SignupAsync(User user, CancellationToken cancellationToken = default)
+    {
+        //user.Password = HashGenerator.Hash(user.Password);
+
+        //user = await _usersService.AddAsync(user, cancellationToken);
+
+        //var usertokens = await GenerateTokenAsync(user.UserId);
+        //await _userTokensService.AddUserTokenAsync(user.UserId, usertokens.AccessToken, usertokens.RefreshToken, cancellationToken);
+
+        //ApiResult<UserTokenDto> reaponse = new(true, ApiResultStatusCode.Success , usertokens);
+
+        //return reaponse;
+        return null; ;
     }
 }

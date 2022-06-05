@@ -4,12 +4,19 @@ namespace BlackBoot.Services.Implementations;
 public class UsersService : IUsersService
 {
     private readonly DbSet<User> _users;
+    private readonly BlackBootDBContext _dbContext;
 
     public UsersService(BlackBootDBContext context)
     {
         _users = context.Set<User>();
+        _dbContext = context;
     }
 
+    public async Task<ApiResult<User>> AddAsync(User user, CancellationToken cancellationToken = default) { 
+        await _users.AddAsync(user);
+        await _dbContext.SaveChangesAsync();
+        return user;    
+    } 
     public async Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => await _users.FirstOrDefaultAsync(x => x.Email.ToUpper() == email.ToUpper(), cancellationToken);
     public async Task<User> GetAsync(Guid id, CancellationToken cancellationToken = default) => await _users.FindAsync(new object[] { id }, cancellationToken);
     public bool CheckPassword(User user, string password, CancellationToken cancellationToken = default) => HashGenerator.Hash(password) == user.Password;

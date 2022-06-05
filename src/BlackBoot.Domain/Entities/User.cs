@@ -3,6 +3,13 @@
 [Table(nameof(User), Schema = nameof(EntitySchema.Base))]
 public class User : IEntity
 {
+    public User()
+    {
+        UserId = Guid.NewGuid();
+        RegistrationDate = DateTime.Now;
+        IsActive = true;
+    }
+
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid UserId { get; set; }
 
@@ -11,7 +18,7 @@ public class User : IEntity
     public Gender Gender { get; set; }
 
     [Required, MaxLength(50)]
-    public string FirstName { get; set; } = null!;
+    public string Fullname { get; set; } = null!;
 
     [Required, MaxLength(20)]
     public string Nationality { get; set; } = null!;

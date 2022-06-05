@@ -6,4 +6,5 @@ public interface IAccountService : ITransientDependency
     Task<UserTokenDto> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
     Task LogoutAsync(string refreshToken, CancellationToken cancellationToken = default);
     Task<UserDto> GetCurrentUserAsync(CancellationToken cancellationToken = default);
+    Task<IApiResult<UserTokenDto>> SignupAsync(User user, CancellationToken cancellationToken = default);
 }

@@ -1,4 +1,6 @@
-﻿namespace BlackBoot.Api.Controllers;
+﻿using BlackBoot.Domain.Entities;
+
+namespace BlackBoot.Api.Controllers;
 
 public class AccountController : BaseController
 {
@@ -20,4 +22,7 @@ public class AccountController : BaseController
     
     [HttpDelete]
     public async Task LogoutAsync(string refreshToken, CancellationToken cancellationToken) => await _accountService.LogoutAsync(refreshToken, cancellationToken);
+
+    [HttpPost]
+    public async Task SignupAsync(User user, CancellationToken cancellationToken) => await _accountService.SignupAsync(user, cancellationToken);
 }
