@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace BlackBoot.Data.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class IntialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -65,7 +66,8 @@ namespace BlackBoot.Data.Migrations
                     Email = table.Column<string>(type: "varchar(128)", unicode: false, maxLength: 128, nullable: false),
                     Password = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: false),
                     WithdrawalWallet = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: true),
-                    RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BirthdayDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -82,7 +84,8 @@ namespace BlackBoot.Data.Migrations
                     Target = table.Column<byte>(type: "tinyint", nullable: false),
                     Type = table.Column<byte>(type: "tinyint", nullable: false),
                     Message = table.Column<string>(type: "varchar(2000)", unicode: false, maxLength: 2000, nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsImportant = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -184,8 +187,8 @@ namespace BlackBoot.Data.Migrations
             migrationBuilder.InsertData(
                 schema: "Base",
                 table: "User",
-                columns: new[] { "UserId", "Email", "FullName", "Gender", "IsActive", "Nationality", "Password", "RegistrationDate", "WithdrawalWallet" },
-                values: new object[] { new Guid("10d714b5-eaca-4eda-842c-f4b6bc9ceb97"), "Admin@BlackBoot.io", "Admin", (byte)1, true, "", "SELEtxzRpGEVskq+ddvHykdlDA2P8hB/2UHoo0uquvc=", new DateTime(2022, 6, 4, 20, 46, 44, 148, DateTimeKind.Local).AddTicks(7797), null });
+                columns: new[] { "UserId", "BirthdayDate", "Email", "FullName", "Gender", "IsActive", "Nationality", "Password", "RegistrationDate", "WithdrawalWallet" },
+                values: new object[] { new Guid("c41d18f0-1c4c-4123-b703-64d167d707b4"), null, "Admin@BlackBoot.io", "Admin", (byte)1, true, "", "SELEtxzRpGEVskq+ddvHykdlDA2P8hB/2UHoo0uquvc=", new DateTime(2022, 6, 5, 17, 26, 46, 365, DateTimeKind.Local).AddTicks(3595), null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notification_UserId",

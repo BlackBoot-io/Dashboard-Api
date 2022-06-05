@@ -27,7 +27,7 @@ public class User : IEntity
 
     public DateTime RegistrationDate { get; set; }
 
-    public DateTime BirthdayDate { get; set; }
+    public DateTime? BirthdayDate { get; set; }
 
     public ICollection<Transaction> Transactions { get; set; }
     public ICollection<Notification> Notifications { get; set; }

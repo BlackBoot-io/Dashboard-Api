@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlackBoot.Data.Migrations
 {
     [DbContext(typeof(BlackBootDBContext))]
-    [Migration("20220605045049_AddBirthdayDateFieldToUser")]
-    partial class AddBirthdayDateFieldToUser
+    [Migration("20220605125646_IntialMigration")]
+    partial class IntialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -82,6 +82,9 @@ namespace BlackBoot.Data.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsImportant")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Message")
                         .IsRequired()
@@ -194,7 +197,7 @@ namespace BlackBoot.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("BirthdayDate")
+                    b.Property<DateTime?>("BirthdayDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
@@ -249,15 +252,14 @@ namespace BlackBoot.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("d0a569cf-aa3d-4631-a365-cf4693441ba3"),
-                            BirthdayDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = new Guid("c41d18f0-1c4c-4123-b703-64d167d707b4"),
                             Email = "Admin@BlackBoot.io",
                             FullName = "Admin",
                             Gender = (byte)1,
                             IsActive = true,
                             Nationality = "",
                             Password = "SELEtxzRpGEVskq+ddvHykdlDA2P8hB/2UHoo0uquvc=",
-                            RegistrationDate = new DateTime(2022, 6, 5, 9, 20, 48, 975, DateTimeKind.Local).AddTicks(3616)
+                            RegistrationDate = new DateTime(2022, 6, 5, 17, 26, 46, 365, DateTimeKind.Local).AddTicks(3595)
                         });
                 });
 
