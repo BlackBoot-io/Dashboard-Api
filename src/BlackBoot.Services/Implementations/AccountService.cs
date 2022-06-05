@@ -63,7 +63,26 @@ public class AccountService : IAccountService
             FullName = user.FullName,
             Gender = user.Gender,
             Nationality = user.Nationality,
+            BirthdayDate = user.BirthdayDate
         };
+    }
+    public async Task<bool> UpdateProfileAsync(UserDto userDto, CancellationToken cancellationToken = default)
+    {
+        var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.GetUserIdAsGuid();
+        if (userId is null)
+            throw new BadRequestException(AppResource.InvalidUser);
+        var user = await _usersservice.GetAsync(userId.Value, cancellationToken);
+        if (user == null) throw new NotFoundException(AppResource.InvalidUser);
+
+        #region Update Profile
+        user.Email = userDto.Email;
+        user.FullName = userDto.FullName;
+        user.Gender = userDto.Gender;
+        user.Nationality = userDto.Nationality;
+        user.BirthdayDate = userDto.BirthdayDate;
+        #endregion
+
+        return await _usersservice.UpdateAsync(user, cancellationToken);
     }
     private async Task<UserTokenDto> GenerateTokenAsync(Guid userId)
     {

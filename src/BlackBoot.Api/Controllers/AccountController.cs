@@ -17,7 +17,10 @@ public class AccountController : BaseController
     
     [HttpGet]
     public async Task<ActionResult<UserDto>> GetCurrentUserAsync(CancellationToken cancellationToken) => Ok(await _accountService.GetCurrentUserAsync(cancellationToken));
-    
+
+    [HttpPut, AllowAnonymous]
+    public async Task<ActionResult<bool>> UpdateProfileAsync(UserDto userDto, CancellationToken cancellationToken = default) => Ok(await _accountService.UpdateProfileAsync(userDto, cancellationToken));
+
     [HttpDelete]
     public async Task LogoutAsync(string refreshToken, CancellationToken cancellationToken) => await _accountService.LogoutAsync(refreshToken, cancellationToken);
 }
