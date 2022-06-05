@@ -9,12 +9,9 @@ namespace BlackBoot.Services.Implementations;
 public class JwtTokenFactory : IJwtTokenFactory
 {
     private readonly JwtSettings _jwtSettings;
-    public JwtTokenFactory(IConfiguration configuration)
-    {
-        _jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
-    }
+    public JwtTokenFactory(IConfiguration configuration) => _jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>();
 
-    public (string Token, int TokenExpirationMinutes) CreateToken(List<Claim> claims, JwtTokenType tokenType)
+    public IActionResponse<(string Token, int TokenExpirationMinutes)> CreateToken(List<Claim> claims, JwtTokenType tokenType)
     {
         var expirationTimeMinutes = tokenType switch
         {
@@ -44,9 +41,9 @@ public class JwtTokenFactory : IJwtTokenFactory
                                                             SecurityAlgorithms.Aes256CbcHmacSha512)
         };
         var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
-        return (tokenHandler.WriteToken(token), expirationTimeMinutes);
+        return new ActionResponse<(string Token, int TokenExpirationMinutes)>((tokenHandler.WriteToken(token), expirationTimeMinutes));
     }
-    public ClaimsPrincipal ReadToken(string token)
+    public IActionResponse<ClaimsPrincipal> ReadToken(string token)
     {
         var secretKey = Encoding.UTF8.GetBytes(_jwtSettings.Key);
         var issuerSigningKey = new SymmetricSecurityKey(secretKey);
@@ -72,8 +69,9 @@ public class JwtTokenFactory : IJwtTokenFactory
 
         var principal = new JwtSecurityTokenHandler().ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
         var jwtSecurityToken = securityToken as JwtSecurityToken;
-        if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.Aes256KW, StringComparison.InvariantCultureIgnoreCase)) return null;
+        if (jwtSecurityToken is null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.Aes256KW, StringComparison.InvariantCultureIgnoreCase))
+            return new ActionResponse<ClaimsPrincipal>(ActionResponseStatusCode.NotFound);
 
-        return principal;
+        return new ActionResponse<ClaimsPrincipal>(principal);
     }
 }

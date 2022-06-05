@@ -8,17 +8,14 @@ public class ApiResultAttribute : ActionFilterAttribute
 {
     public override void OnResultExecuting(ResultExecutingContext context)
     {
-        if (context.Result is OkObjectResult okObjectResult)
+        if (context.Result is OkObjectResult okObjectResult && okObjectResult.Value is ActionResponse result)
         {
-            var apiResult = new ApiResult<object>(true, ApiResultStatusCode.Success, okObjectResult.Value);
-            context.Result = new JsonResult(apiResult) { StatusCode = okObjectResult.StatusCode };
+            context.Result = new JsonResult(result) { StatusCode = (int)result.StatusCode };
         }
         else if (context.Result is OkResult okResult)
         {
-            var apiResult = new ApiResult(true, ApiResultStatusCode.Success);
-            context.Result = new JsonResult(apiResult) { StatusCode = okResult.StatusCode };
+            context.Result = new JsonResult(new ActionResponse()) { StatusCode = okResult.StatusCode };
         }
-        //return BadRequest() method create an ObjectResult with StatusCode 400 in recent versions, So the following code has changed a bit.
         else if (context.Result is ObjectResult badRequestObjectResult && badRequestObjectResult.StatusCode == 400)
         {
             string message = null;
@@ -26,18 +23,18 @@ public class ApiResultAttribute : ActionFilterAttribute
             {
                 case ValidationProblemDetails validationProblemDetails:
                     var errorMessages = validationProblemDetails.Errors.Select(p => new { Key = p.Key, Value = p.Value }).Distinct();
-                    message = JsonSerializer.Serialize(errorMessages);// string.Join(" | ", errorMessages);
+                    message = JsonSerializer.Serialize(errorMessages);
                     break;
                 case SerializableError errors:
                     var errorMessages2 = errors.Select(p => new { Key = p.Key, Value = p.Value }).Distinct();
-                    message = JsonSerializer.Serialize(errorMessages2); //string.Join(" | ", errorMessages2);
+                    message = JsonSerializer.Serialize(errorMessages2);
                     break;
                 case var value when value != null && value is not ProblemDetails:
                     message = badRequestObjectResult.Value.ToString();
                     break;
             }
 
-            ApiResult apiResult = new(false, ApiResultStatusCode.BadRequest, message);
+            ActionResponse apiResult = new(ActionResponseStatusCode.BadRequest, message);
             context.Result = new JsonResult(apiResult) { StatusCode = badRequestObjectResult.StatusCode };
         }
         else if (context.Result is ObjectResult notFoundObjectResult && notFoundObjectResult.StatusCode == 404)
@@ -46,18 +43,17 @@ public class ApiResultAttribute : ActionFilterAttribute
             if (notFoundObjectResult.Value != null && notFoundObjectResult.Value is not ProblemDetails)
                 message = notFoundObjectResult.Value.ToString();
 
-            //var apiResult = new ApiResult<object>(false, ApiResultStatusCode.NotFound, notFoundObjectResult.Value);
-            var apiResult = new ApiResult(false, ApiResultStatusCode.NotFound, message);
+            ActionResponse apiResult = new(ActionResponseStatusCode.NotFound, message);
             context.Result = new JsonResult(apiResult) { StatusCode = notFoundObjectResult.StatusCode };
         }
         else if (context.Result is ContentResult contentResult)
         {
-            var apiResult = new ApiResult(true, ApiResultStatusCode.Success, contentResult.Content);
+            ActionResponse apiResult = new(ActionResponseStatusCode.Success, contentResult.Content);
             context.Result = new JsonResult(apiResult) { StatusCode = contentResult.StatusCode };
         }
-        else if (context.Result is ObjectResult objectResult && objectResult.StatusCode == null && objectResult.Value is not ApiResult)
+        else if (context.Result is ObjectResult objectResult && objectResult.StatusCode == null && objectResult.Value is not ActionResponse)
         {
-            var apiResult = new ApiResult<object>(true, ApiResultStatusCode.Success, objectResult.Value);
+            var apiResult = new ActionResponse<object>(objectResult.Value);
             context.Result = new JsonResult(apiResult) { StatusCode = objectResult.StatusCode };
         }
 
