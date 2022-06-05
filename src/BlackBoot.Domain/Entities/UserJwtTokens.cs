@@ -9,7 +9,7 @@ public class UserJwtToken : IEntity
     public Guid? UserId { get; set; }
     [ForeignKey(nameof(UserId))]
     public virtual User User { get; set; }
-    
+
     public string AccessTokenHash { get; set; }
     public DateTimeOffset AccessTokenExpiresTime { get; set; }
     public string RefreshTokenHash { get; set; }

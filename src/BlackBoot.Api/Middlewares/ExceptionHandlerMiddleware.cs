@@ -1,7 +1,6 @@
 ﻿#nullable disable
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 
 namespace BlackBoot.Api.Middlewares;

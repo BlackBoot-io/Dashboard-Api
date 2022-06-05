@@ -1,11 +1,4 @@
-﻿using BlackBoot.Shared.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BlackBoot.Services.Implementations;
+﻿namespace BlackBoot.Services.Implementations;
 
 public class CrowdSaleScheduleService : ICrowdSaleScheduleService
 {

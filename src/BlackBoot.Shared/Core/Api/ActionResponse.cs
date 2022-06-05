@@ -11,7 +11,7 @@ public interface IActionResponse
     public ActionResponseStatusCode StatusCode { get; set; }
     public string Message { get; set; }
 }
-public interface IActionResponse<TData> : IActionResponse 
+public interface IActionResponse<TData> : IActionResponse
 {
     public TData Data { get; set; }
 }
@@ -39,7 +39,7 @@ public class ActionResponse : IActionResponse
         StatusCode = statusCode;
         Message = GetDisplayName(statusCode);
     }
-    public ActionResponse(ActionResponseStatusCode statusCode, string message = null)
+    public ActionResponse(ActionResponseStatusCode statusCode, string message)
     {
         IsSuccess = statusCode switch
         {
@@ -51,7 +51,7 @@ public class ActionResponse : IActionResponse
             _ => false
         };
         StatusCode = statusCode;
-        Message = message ?? GetDisplayName(statusCode);
+        Message = message;
     }
 
 
@@ -93,7 +93,7 @@ public class ActionResponse : IActionResponse
         return propValue.ToString();
     }
 }
-public class ActionResponse<TData> : ActionResponse, IActionResponse<TData> 
+public class ActionResponse<TData> : ActionResponse, IActionResponse<TData>
 {
     public TData Data { get; set; }
 
