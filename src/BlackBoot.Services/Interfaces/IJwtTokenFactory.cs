@@ -4,6 +4,6 @@ namespace BlackBoot.Services.Interfaces;
 
 public interface IJwtTokenFactory : IScopedDependency
 {
-    (string Token, int TokenExpirationMinutes) CreateToken(List<Claim> claims, JwtTokenType tokenType);
-    ClaimsPrincipal ReadToken(string token);
+    IActionResponse<(string Token, int TokenExpirationMinutes)> CreateToken(List<Claim> claims, JwtTokenType tokenType);
+    IActionResponse<ClaimsPrincipal> ReadToken(string token);
 }

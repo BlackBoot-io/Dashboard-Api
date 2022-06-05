@@ -2,7 +2,7 @@
 
 public interface IUserService : IScopedDependency
 {
-    Task<User> GetAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
-    bool CheckPassword(User user, string password, CancellationToken cancellationToken = default);
+    Task<IActionResponse<User>> GetAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<IActionResponse<User>> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
+    IActionResponse<bool> CheckPassword(User user, string password, CancellationToken cancellationToken = default);
 }

@@ -15,7 +15,7 @@ public class UserJwtTokenService : IUserJwtTokenService
         _userJwtToken = context.Set<UserJwtToken>();
     }
 
-    public async Task AddUserTokenAsync(Guid userId, string accessToken, string refreshToken, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse> AddUserTokenAsync(Guid userId, string accessToken, string refreshToken, CancellationToken cancellationToken = default)
     {
         var model = new UserJwtToken
         {
@@ -28,39 +28,34 @@ public class UserJwtTokenService : IUserJwtTokenService
         await DeleteTokensWithSameRefreshTokenAsync(userId, refreshToken, cancellationToken);
         await _userJwtToken.AddAsync(model, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
+        return new ActionResponse();
     }
-    public async Task RevokeUserTokensAsync(Guid userId, string refreshToken, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse> RevokeUserTokensAsync(Guid userId, string refreshToken, CancellationToken cancellationToken = default)
     {
         if (!string.IsNullOrEmpty(refreshToken))
             await DeleteTokensWithSameRefreshTokenAsync(userId, refreshToken, cancellationToken);
         await DeleteExpiredTokensAsync(cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
+        return new ActionResponse();
     }
-    public async Task<bool> VerifyTokenAsync(Guid userId, string accessToken, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse<bool>> VerifyTokenAsync(Guid userId, string accessToken, CancellationToken cancellationToken = default)
     {
         var hashesAccessToken = HashGenerator.Hash(accessToken);
         var token = await _userJwtToken.AsNoTracking().Where(x => x.UserId == userId && x.AccessTokenHash == hashesAccessToken).FirstOrDefaultAsync(cancellationToken);
-        return token != null && token.AccessTokenExpiresTime >= DateTime.Now;
+        return new ActionResponse<bool>(token != null && token.AccessTokenExpiresTime >= DateTime.Now);
     }
-    public async Task<UserJwtToken> GetRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse<UserJwtToken>> GetRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrEmpty(refreshToken))
-            return null;
+            return new ActionResponse<UserJwtToken>(ActionResponseStatusCode.NotFound);
 
-        return await _userJwtToken.Where(x => x.RefreshTokenHash == HashGenerator.Hash(refreshToken)).FirstOrDefaultAsync(cancellationToken);
+        return new ActionResponse<UserJwtToken>(await _userJwtToken.Where(x => x.RefreshTokenHash == HashGenerator.Hash(refreshToken)).FirstOrDefaultAsync(cancellationToken));
     }
 
-    private async Task InvalidateUserTokensAsync(Guid userId, CancellationToken cancellationToken = default)
-    {
-        var tokens = await _userJwtToken.Where(x => x.UserId == userId).ToListAsync(cancellationToken);
-        _userJwtToken.RemoveRange(tokens);
-    }
     private async Task DeleteTokensWithSameRefreshTokenAsync(Guid userId, string refreshToken, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(refreshToken))
-        {
             return;
-        }
         var hashedRefreshToken = HashGenerator.Hash(refreshToken);
         var tokens = await _userJwtToken.Where(t => t.UserId == userId && t.RefreshTokenHash == hashedRefreshToken).ToListAsync(cancellationToken);
         _userJwtToken.RemoveRange(tokens);
