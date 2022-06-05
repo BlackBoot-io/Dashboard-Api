@@ -85,6 +85,26 @@ public class AccountService : IAccountService
 
         return await _userService.UpdateAsync(user, cancellationToken);
     }
+    public async Task<IActionResponse<bool>> ChangePassword(UserChangePasswordDto userChangePasswordDto, CancellationToken cancellationToken = default)
+    {
+        if (userChangePasswordDto.ConfirmPassword != userChangePasswordDto.NewPassword)
+            return new ActionResponse<bool>(ActionResponseStatusCode.BadRequest, AppResource.NewAndConfirmPasswordsDoNotMatch);
+
+        var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.GetUserIdAsGuid();
+        if (userId is null) return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
+
+        var userGetResponse = await _userService.GetAsync(userId.Value, cancellationToken);
+        var user = userGetResponse.Data;
+        if (user == null) return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
+
+        if (HashGenerator.Hash(userChangePasswordDto.OldPassword) != user.Password)
+            return new ActionResponse<bool>(ActionResponseStatusCode.Forbidden, AppResource.PreviousPasswordsDoNotMatch);
+
+        var hashedNewPassword = HashGenerator.Hash(userChangePasswordDto.NewPassword);
+        user.Password = hashedNewPassword;
+
+        return await _userService.UpdateAsync(user, cancellationToken);
+    }
     private async Task<UserTokenDto> GenerateTokenAsync(Guid userId, CancellationToken cancellationToken)
     {
         var user = await _userService.GetAsync(userId, cancellationToken);

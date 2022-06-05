@@ -17,5 +17,8 @@ public enum ActionResponseStatusCode
     NotFound = 404,
 
     [Display(Name = "خطای احراز هویت")]
-    UnAuthorized = 401
+    UnAuthorized = 401,
+
+    [Display(Name = "درخواست کننده مجاز به انجام این درخواست نیست")]
+    Forbidden = 403
 }
