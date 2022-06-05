@@ -64,7 +64,7 @@ public class ActionResponse : IActionResponse
             var errorMessages = errors.SelectMany(p => (string[])p.Value).Distinct();
             message = string.Join(" | ", errorMessages);
         }
-        return new ActionResponse(ActionResponseStatusCode.BadRequest, message);
+        return new(ActionResponseStatusCode.BadRequest, message);
     }
 
     public static implicit operator ActionResponse(ContentResult result) => new(ActionResponseStatusCode.Success, result.Content);
@@ -109,11 +109,11 @@ public class ActionResponse<TData> : ActionResponse, IActionResponse<TData>
             var errorMessages = errors.SelectMany(p => (string[])p.Value).Distinct();
             message = string.Join(" | ", errorMessages);
         }
-        return new ActionResponse<TData>(ActionResponseStatusCode.BadRequest, message);
+        return new(ActionResponseStatusCode.BadRequest, message);
     }
-    public static implicit operator ActionResponse<TData>(ContentResult result) => new (ActionResponseStatusCode.Success, result.Content);
-    public static implicit operator ActionResponse<TData>(NotFoundResult result) => new (ActionResponseStatusCode.NotFound);
-    public static implicit operator ActionResponse<TData>(NotFoundObjectResult result) => new (ActionResponseStatusCode.NotFound, (TData)result.Value);
+    public static implicit operator ActionResponse<TData>(ContentResult result) => new(ActionResponseStatusCode.Success, result.Content);
+    public static implicit operator ActionResponse<TData>(NotFoundResult result) => new(ActionResponseStatusCode.NotFound);
+    public static implicit operator ActionResponse<TData>(NotFoundObjectResult result) => new(ActionResponseStatusCode.NotFound, (TData)result.Value);
 
     #endregion
 }
