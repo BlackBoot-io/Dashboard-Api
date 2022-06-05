@@ -22,11 +22,11 @@ public class ApiResultAttribute : ActionFilterAttribute
             switch (badRequestObjectResult.Value)
             {
                 case ValidationProblemDetails validationProblemDetails:
-                    var errorMessages = validationProblemDetails.Errors.Select(p => new { Key = p.Key, Value = p.Value }).Distinct();
+                    var errorMessages = validationProblemDetails.Errors.Select(p => new { p.Key, p.Value }).Distinct();
                     message = JsonSerializer.Serialize(errorMessages);
                     break;
                 case SerializableError errors:
-                    var errorMessages2 = errors.Select(p => new { Key = p.Key, Value = p.Value }).Distinct();
+                    var errorMessages2 = errors.Select(p => new { p.Key, p.Value }).Distinct();
                     message = JsonSerializer.Serialize(errorMessages2);
                     break;
                 case var value when value != null && value is not ProblemDetails:
