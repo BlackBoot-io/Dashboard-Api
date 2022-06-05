@@ -46,15 +46,15 @@ public static class ServiceCollectionExtentions
             {
 
                 var token = ((JwtSecurityToken)context.SecurityToken).RawData;
-                var userTokenService = context.HttpContext.RequestServices.GetRequiredService<IUserJwtTokensService>();
+                var userTokenService = context.HttpContext.RequestServices.GetRequiredService<IUserJwtTokenService>();
                 var userId = context?.Principal?.Identity?.GetUserIdAsGuid();
-                if (userId == null || userId == Guid.Empty)
+                if (userId is null || userId == Guid.Empty)
                 {
                     context?.Fail(AppResource.InvalidUser);
                     return;
                 }
                 var validate = await userTokenService.VerifyTokenAsync(userId.Value, token, context.HttpContext.RequestAborted);
-                if (!validate)
+                if (!validate.Data)
                 {
                     context.Fail(AppResource.InvalidUser);
                     return;

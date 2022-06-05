@@ -23,7 +23,7 @@ public class BlackBootDBContext : DbContext
         modelBuilder.Entity<User>().HasData(new User
         {
             UserId = Guid.NewGuid(),
-            Fullname = "Admin",
+            FullName = "Admin",
             Email = "Admin@BlackBoot.io",
             Password = HashGenerator.Hash("Adm!nP@ssw0rd"),
             Gender = Domain.Enums.Gender.Male,

@@ -6,79 +6,132 @@ namespace BlackBoot.Services.Implementations;
 public class AccountService : IAccountService
 {
 
-    private readonly IUsersService _usersService;
-    private readonly IUserJwtTokensService _userTokensService;
-    private readonly IUserJwtTokenFactory _userTokenFactoryService;
+    private readonly IUserService _userService;
+    private readonly IUserJwtTokenService _userTokenService;
+    private readonly IJwtTokenFactory _tokenFactoryService;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    public AccountService(IUsersService usersservice,
-                          IUserJwtTokensService userTokensService,
-                          IUserJwtTokenFactory userTokenFactoryService,
+    public AccountService(IUserService userService,
+                          IUserJwtTokenService userTokenService,
+                          IJwtTokenFactory tokenFactoryService,
                           IHttpContextAccessor httpContextAccessor)
     {
-        _usersService = usersservice;
-        _userTokensService = userTokensService;
-        _userTokenFactoryService = userTokenFactoryService;
+        _userService = userService;
+        _userTokenService = userTokenService;
+        _tokenFactoryService = tokenFactoryService;
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public async Task<UserTokenDto> LoginAsync(UserLoginDto item, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse<UserTokenDto>> LoginAsync(UserLoginDto item, CancellationToken cancellationToken = default)
     {
-        var user = await _usersService.GetByEmailAsync(item.Email, cancellationToken);
-        if (user == null) throw new NotFoundException(AppResource.InvalidUser);
+        var user = await _userService.GetByEmailAsync(item.Email, cancellationToken);
+        if (user.Data is null) return new ActionResponse<UserTokenDto>(ActionResponseStatusCode.NotFound, AppResource.InvalidUser);
 
-        var checkPasswordResult = _usersService.CheckPassword(user, item.Password, cancellationToken);
-        if (!checkPasswordResult) throw new NotFoundException(AppResource.InvalidUser);
+        var checkPasswordResult = _userService.CheckPassword(user.Data, item.Password, cancellationToken);
+        if (!checkPasswordResult.Data) return new ActionResponse<UserTokenDto>(ActionResponseStatusCode.NotFound, AppResource.InvalidUser);
 
-        var usertokens = await GenerateTokenAsync(user.UserId);
-        await _userTokensService.AddUserTokenAsync(user.UserId, usertokens.AccessToken, usertokens.RefreshToken, cancellationToken);
-        return usertokens;
+        var usertokens = await GenerateTokenAsync(user.Data.UserId, cancellationToken);
+        await _userTokenService.AddUserTokenAsync(user.Data.UserId, usertokens.AccessToken, usertokens.RefreshToken, cancellationToken);
+        return new ActionResponse<UserTokenDto>(usertokens); ;
     }
-    public async Task LogoutAsync(string refreshtoken, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse> LogoutAsync(string refreshtoken, CancellationToken cancellationToken = default)
     {
         var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.GetUserIdAsGuid();
         if (userId is null || string.IsNullOrEmpty(refreshtoken))
-            throw new BadRequestException(AppResource.InvalidUser);
+            return new ActionResponse(ActionResponseStatusCode.NotFound, AppResource.InvalidUser);
 
-        await _userTokensService.RevokeUserTokensAsync(userId.Value, refreshtoken, cancellationToken);
+        await _userTokenService.RevokeUserTokensAsync(userId.Value, refreshtoken, cancellationToken);
+        return new ActionResponse();
     }
-    public async Task<UserTokenDto> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse<UserTokenDto>> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
     {
-        var refreshTokenModel = await _userTokensService.GetRefreshTokenAsync(refreshToken, cancellationToken);
-        if (refreshTokenModel is null)
-            throw new BadRequestException(AppResource.InvalidUser);
+        var refreshTokenModel = await _userTokenService.GetRefreshTokenAsync(refreshToken, cancellationToken);
+        if (refreshTokenModel.Data is null)
+            return new ActionResponse<UserTokenDto>(ActionResponseStatusCode.NotFound, AppResource.InvalidUser);
 
-        var usertokens = await GenerateTokenAsync(refreshTokenModel.UserId.Value);
-        await _userTokensService.AddUserTokenAsync(refreshTokenModel.UserId.Value, usertokens.AccessToken, usertokens.RefreshToken, cancellationToken);
-        return usertokens;
+        var usertokens = await GenerateTokenAsync(refreshTokenModel.Data.UserId.Value, cancellationToken);
+        await _userTokenService.AddUserTokenAsync(refreshTokenModel.Data.UserId.Value, usertokens.AccessToken, usertokens.RefreshToken, cancellationToken);
+        return new ActionResponse<UserTokenDto>(usertokens);
     }
-    public async Task<UserDto> GetCurrentUserAsync(CancellationToken cancellationToken = default)
+    public async Task<IActionResponse<UserDto>> GetCurrentUserAsync(CancellationToken cancellationToken = default)
     {
         var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.GetUserIdAsGuid();
         if (userId is null)
-            throw new BadRequestException(AppResource.InvalidUser);
-        var user = await _usersService.GetAsync(userId.Value, cancellationToken);
-        return new UserDto { };
+            return new ActionResponse<UserDto>(ActionResponseStatusCode.NotFound, AppResource.InvalidUser);
+        var user = await _userService.GetAsync(userId.Value, cancellationToken);
+        return new ActionResponse<UserDto>(new UserDto
+        {
+            Email = user.Data.Email,
+            FullName = user.Data.FullName,
+            Gender = user.Data.Gender,
+            Nationality = user.Data.Nationality,
+        });
     }
-    private async Task<UserTokenDto> GenerateTokenAsync(Guid userId)
+    public async Task<IActionResponse<bool>> UpdateProfileAsync(UserDto userDto, CancellationToken cancellationToken = default)
     {
-        var user = await _usersService.GetAsync(userId, default);
-        var accessToken = _userTokenFactoryService.CreateToken(new List<Claim>
+        var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.GetUserIdAsGuid();
+        if (userId is null)
+            return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.InvalidUser);
+        var userResponse = await _userService.GetAsync(userId.Value, cancellationToken);
+        var user = userResponse.Data;
+        if (user == null) return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.InvalidUser);
+
+        #region Update Profile
+        user.Email = userDto.Email;
+        user.FullName = userDto.FullName;
+        user.Gender = userDto.Gender;
+        user.Nationality = userDto.Nationality;
+        user.BirthdayDate = userDto.BirthdayDate;
+        #endregion
+
+        return await _userService.UpdateAsync(user, cancellationToken);
+    }
+    public async Task<IActionResponse<bool>> ChangePassword(UserChangePasswordDto userChangePasswordDto, CancellationToken cancellationToken = default)
+    {
+        if (userChangePasswordDto.ConfirmPassword != userChangePasswordDto.NewPassword)
+            return new ActionResponse<bool>(ActionResponseStatusCode.BadRequest, AppResource.NewAndConfirmPasswordsDoNotMatch);
+
+        var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.GetUserIdAsGuid();
+        if (userId is null) return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
+
+        var userGetResponse = await _userService.GetAsync(userId.Value, cancellationToken);
+        var user = userGetResponse.Data;
+        if (user == null) return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
+
+        if (HashGenerator.Hash(userChangePasswordDto.OldPassword) != user.Password)
+            return new ActionResponse<bool>(ActionResponseStatusCode.Forbidden, AppResource.PreviousPasswordsDoNotMatch);
+
+        var hashedNewPassword = HashGenerator.Hash(userChangePasswordDto.NewPassword);
+        user.Password = hashedNewPassword;
+
+        return await _userService.UpdateAsync(user, cancellationToken);
+    }
+    private async Task<UserTokenDto> GenerateTokenAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        var user = await _userService.GetAsync(userId, cancellationToken);
+        var accessToken = _tokenFactoryService.CreateToken(new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier,user.UserId.ToString()),
-                new Claim(ClaimTypes.Email,user.Email)
+                new Claim(ClaimTypes.NameIdentifier,user.Data.UserId.ToString()),
+                new Claim(ClaimTypes.Email,user.Data.Email)
             }, JwtTokenType.AccessToken);
 
-        var refreshToken = _userTokenFactoryService.CreateToken(new List<Claim>
+        var refreshToken = _tokenFactoryService.CreateToken(new List<Claim>
             {
-               new Claim("AccessToken",accessToken.Token)
+               new Claim("AccessToken",accessToken.Data.Token)
 
             }, JwtTokenType.RefreshToken);
         UserTokenDto result = new ()
         {
-            AccessToken = accessToken.Token,
-            AccessTokenExpireTime = DateTimeOffset.UtcNow.AddMinutes(accessToken.TokenExpirationMinutes),
-            RefreshToken = refreshToken.Token,
-            RefreshTokenExpireTime = DateTimeOffset.UtcNow.AddMinutes(accessToken.TokenExpirationMinutes)
+            AccessToken = accessToken.Data.Token,
+            AccessTokenExpireTime = DateTimeOffset.UtcNow.AddMinutes(accessToken.Data.TokenExpirationMinutes),
+            RefreshToken = refreshToken.Data.Token,
+            RefreshTokenExpireTime = DateTimeOffset.UtcNow.AddMinutes(refreshToken.Data.TokenExpirationMinutes),
+            User = new UserDto
+            {
+                Email = user.Data.Email,
+                FullName = user.Data.FullName,
+                Gender = user.Data.Gender,
+                Nationality = user.Data.Nationality
+            }
         };
 
         return result;

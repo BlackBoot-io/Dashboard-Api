@@ -4,7 +4,6 @@ using System.Security.Claims;
 
 namespace BlackBoot.Shared.Core;
 
-
 public class RequireEncryptedTokenHandler : JwtSecurityTokenHandler
 {
     public override ClaimsPrincipal ValidateToken(string token, TokenValidationParameters validationParameters, out SecurityToken validatedToken)
@@ -12,7 +11,7 @@ public class RequireEncryptedTokenHandler : JwtSecurityTokenHandler
         if (string.IsNullOrWhiteSpace(token))
             throw new ArgumentNullException(nameof(token));
 
-        if (validationParameters == null)
+        if (validationParameters is null)
             throw new ArgumentNullException(nameof(validationParameters));
 
         if (token.Length > MaximumTokenSizeInBytes)

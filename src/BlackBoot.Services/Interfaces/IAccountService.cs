@@ -1,10 +1,11 @@
 ﻿namespace BlackBoot.Services.Interfaces;
 
-public interface IAccountService : ITransientDependency
+public interface IAccountService : IScopedDependency
 {
-    Task<UserTokenDto> LoginAsync(UserLoginDto userLoginDto, CancellationToken cancellationToken = default);
-    Task<UserTokenDto> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
-    Task LogoutAsync(string refreshToken, CancellationToken cancellationToken = default);
-    Task<UserDto> GetCurrentUserAsync(CancellationToken cancellationToken = default);
-    Task<IApiResult<UserTokenDto>> SignupAsync(User user, CancellationToken cancellationToken = default);
+    Task<IActionResponse<UserTokenDto>> LoginAsync(UserLoginDto userLoginDto, CancellationToken cancellationToken = default);
+    Task<IActionResponse<UserTokenDto>> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default);
+    Task<IActionResponse> LogoutAsync(string refreshToken, CancellationToken cancellationToken = default);
+    Task<IActionResponse<UserDto>> GetCurrentUserAsync(CancellationToken cancellationToken = default);
+    Task<IActionResponse<bool>> UpdateProfileAsync(UserDto userDto, CancellationToken cancellationToken = default);
+    Task<IActionResponse<bool>> ChangePassword(UserChangePasswordDto userChangePasswordDto, CancellationToken cancellationToken = default);
 }

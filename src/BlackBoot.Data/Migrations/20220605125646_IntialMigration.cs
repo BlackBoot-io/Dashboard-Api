@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BlackBoot.Data.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class IntialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -61,12 +61,13 @@ namespace BlackBoot.Data.Migrations
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     Gender = table.Column<byte>(type: "tinyint", nullable: false),
-                    FirstName = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
+                    FullName = table.Column<string>(type: "varchar(150)", unicode: false, maxLength: 150, nullable: false),
                     Nationality = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: false),
                     Email = table.Column<string>(type: "varchar(128)", unicode: false, maxLength: 128, nullable: false),
                     Password = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: false),
                     WithdrawalWallet = table.Column<string>(type: "varchar(256)", unicode: false, maxLength: 256, nullable: true),
-                    RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    RegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BirthdayDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -83,7 +84,8 @@ namespace BlackBoot.Data.Migrations
                     Target = table.Column<byte>(type: "tinyint", nullable: false),
                     Type = table.Column<byte>(type: "tinyint", nullable: false),
                     Message = table.Column<string>(type: "varchar(2000)", unicode: false, maxLength: 2000, nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsImportant = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -181,6 +183,12 @@ namespace BlackBoot.Data.Migrations
                         principalTable: "User",
                         principalColumn: "UserId");
                 });
+
+            migrationBuilder.InsertData(
+                schema: "Base",
+                table: "User",
+                columns: new[] { "UserId", "BirthdayDate", "Email", "FullName", "Gender", "IsActive", "Nationality", "Password", "RegistrationDate", "WithdrawalWallet" },
+                values: new object[] { new Guid("c41d18f0-1c4c-4123-b703-64d167d707b4"), null, "Admin@BlackBoot.io", "Admin", (byte)1, true, "", "SELEtxzRpGEVskq+ddvHykdlDA2P8hB/2UHoo0uquvc=", new DateTime(2022, 6, 5, 17, 26, 46, 365, DateTimeKind.Local).AddTicks(3595), null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notification_UserId",

@@ -68,5 +68,32 @@ namespace BlackBoot.Services.Resources {
                 return ResourceManager.GetString("InvalidUser", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NewAndConfirmPasswordsDoNotMatch.
+        /// </summary>
+        public static string NewAndConfirmPasswordsDoNotMatch {
+            get {
+                return ResourceManager.GetString("NewAndConfirmPasswordsDoNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PreviousPasswordsDoNotMatch.
+        /// </summary>
+        public static string PreviousPasswordsDoNotMatch {
+            get {
+                return ResourceManager.GetString("PreviousPasswordsDoNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserNotFound.
+        /// </summary>
+        public static string UserNotFound {
+            get {
+                return ResourceManager.GetString("UserNotFound", resourceCulture);
+            }
+        }
     }
 }
