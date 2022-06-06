@@ -21,8 +21,12 @@ public class UserService : IUserService
     public async Task<IActionResponse<bool>> UpdateAsync(User user, CancellationToken cancellationToken = default)
     {
         _users.Update(user);
-        await _context.SaveChangesAsync();
-        return new ActionResponse<bool>(true);
+
+        var dbResult = await _context.SaveChangesAsync();
+        if (!dbResult.ToSaveChangeResult())
+            return new ActionResponse<bool>(ActionResponseStatusCode.ServerError);
+
+        return new ActionResponse<bool>();
     }
 
     public IActionResponse<bool> CheckPassword(User user, string password, CancellationToken cancellationToken = default)

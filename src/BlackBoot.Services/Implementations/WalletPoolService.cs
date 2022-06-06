@@ -27,9 +27,11 @@ public class WalletPoolService : IWalletPoolService
         var wallet = await _walletPool.FirstOrDefaultAsync(X => !X.IsUsed && X.Network == network);
         wallet.UserId = userId;
         wallet.IsUsed = true;
+
         var dbResult = _context.SaveChanges();
         if (!dbResult.ToSaveChangeResult())
             return new ActionResponse<WalletPool>(ActionResponseStatusCode.ServerError);
+        
         return new ActionResponse<WalletPool>(wallet);
     }
 }

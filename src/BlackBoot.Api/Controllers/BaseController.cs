@@ -1,5 +1,4 @@
-﻿using BlackBoot.Api.Attributes;
-using BlackBoot.Api.Filters;
+﻿using BlackBoot.Api.Filters;
 
 namespace BlackBoot.Api.Controllers;
 

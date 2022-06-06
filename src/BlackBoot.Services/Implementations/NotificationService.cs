@@ -21,7 +21,9 @@ public class NotificationService : INotificationService
     public async Task<IActionResponse<Notification>> AddAsync(Notification notification, CancellationToken cancellation)
     {
         await _notifications.AddAsync(notification, cancellation);
-        await _context.SaveChangesAsync(cancellation);
+        var dbResult = await _context.SaveChangesAsync();
+        if (!dbResult.ToSaveChangeResult())
+            return new ActionResponse<Notification>(ActionResponseStatusCode.ServerError);
         return new ActionResponse<Notification>(notification);
     }
 
@@ -32,7 +34,9 @@ public class NotificationService : INotificationService
             return new ActionResponse(ActionResponseStatusCode.NotFound);
 
         _notifications.Remove(notification);
-        await _context.SaveChangesAsync(cancellation);
+        var dbResult = await _context.SaveChangesAsync();
+        if (!dbResult.ToSaveChangeResult())
+            return new ActionResponse<Notification>(ActionResponseStatusCode.ServerError);
 
         return new ActionResponse();
     }
