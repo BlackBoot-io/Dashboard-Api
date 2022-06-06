@@ -9,9 +9,13 @@
 
   <ItemGroup>
     <Compile Remove="Attributes\**" />
+    <Compile Remove="NewFolder\**" />
     <Content Remove="Attributes\**" />
+    <Content Remove="NewFolder\**" />
     <EmbeddedResource Remove="Attributes\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
     <None Remove="Attributes\**" />
+    <None Remove="NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,10 +33,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlackBoot.Services\BlackBoot.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="NewFolder\" />
   </ItemGroup>
 
 </Project>
