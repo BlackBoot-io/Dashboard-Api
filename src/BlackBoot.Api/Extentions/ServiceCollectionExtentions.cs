@@ -12,7 +12,7 @@ public static class ServiceCollectionExtentions
     {
         services.AddDbContext<BlackBootDBContext>((IServiceProvider serviceProvider, DbContextOptionsBuilder options) =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("BlckBootDbContext"));
+            options.UseSqlServer(configuration["BlckBootDbContext"]);
         });
     }
     public static void AddBlackBootAuthentication(this IServiceCollection services, IConfiguration configuration)
