@@ -15,7 +15,7 @@ public class AccountController : BaseController
     public async Task<ActionResult<UserTokenDto>> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken) => Ok(await _accountService.RefreshTokenAsync(refreshToken, cancellationToken));
 
     [HttpPost]
-    public async Task<ActionResult<bool>> ChangePassword(UserChangePasswordDto userChangePasswordDto, CancellationToken cancellationToken = default) => Ok(await _accountService.ChangePassword(userChangePasswordDto, cancellationToken));
+    public async Task<ActionResult<bool>> ChangePasswordAsync(UserChangePasswordDto userChangePasswordDto, CancellationToken cancellationToken = default) => Ok(await _accountService.ChangePasswordAsync(userChangePasswordDto, cancellationToken));
 
     [HttpGet]
     public async Task<ActionResult<UserDto>> GetCurrentUserAsync(CancellationToken cancellationToken) => Ok(await _accountService.GetCurrentUserAsync(cancellationToken));
@@ -23,6 +23,9 @@ public class AccountController : BaseController
     [HttpPut]
     public async Task<ActionResult<bool>> UpdateProfileAsync(UserDto userDto, CancellationToken cancellationToken = default)
         => Ok(await _accountService.UpdateProfileAsync(userDto, cancellationToken));
+
+    [HttpPut]
+    public async Task<ActionResult<bool>> UpdateWalletAsync(string withdrawalWallet, CancellationToken cancellationToken = default) => Ok(await _accountService.UpdateWalletAsync(withdrawalWallet, cancellationToken));
 
     [HttpDelete]
     public async Task LogoutAsync(string refreshToken, CancellationToken cancellationToken) 

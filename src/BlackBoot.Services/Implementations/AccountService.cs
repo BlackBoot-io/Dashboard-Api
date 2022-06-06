@@ -85,7 +85,7 @@ public class AccountService : IAccountService
 
         return await _userService.UpdateAsync(user, cancellationToken);
     }
-    public async Task<IActionResponse<bool>> ChangePassword(UserChangePasswordDto userChangePasswordDto, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse<bool>> ChangePasswordAsync(UserChangePasswordDto userChangePasswordDto, CancellationToken cancellationToken = default)
     {
         if (userChangePasswordDto.ConfirmPassword != userChangePasswordDto.NewPassword)
             return new ActionResponse<bool>(ActionResponseStatusCode.BadRequest, AppResource.NewAndConfirmPasswordsDoNotMatch);
@@ -102,6 +102,19 @@ public class AccountService : IAccountService
 
         var hashedNewPassword = HashGenerator.Hash(userChangePasswordDto.NewPassword);
         user.Password = hashedNewPassword;
+
+        return await _userService.UpdateAsync(user, cancellationToken);
+    }
+    public async Task<IActionResponse<bool>> UpdateWalletAsync(string withdrawalWallet, CancellationToken cancellationToken = default)
+    {
+        var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.GetUserIdAsGuid();
+        if (userId is null) return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
+
+        var userGetResponse = await _userService.GetAsync(userId.Value, cancellationToken);
+        var user = userGetResponse.Data;
+        if (user == null) return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
+
+        user.WithdrawalWallet = withdrawalWallet;
 
         return await _userService.UpdateAsync(user, cancellationToken);
     }
