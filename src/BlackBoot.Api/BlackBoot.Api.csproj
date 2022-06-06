@@ -30,4 +30,8 @@
     <ProjectReference Include="..\BlackBoot.Services\BlackBoot.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
+  </ItemGroup>
+
 </Project>

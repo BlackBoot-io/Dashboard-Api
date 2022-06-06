@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlackBoot.Data.Migrations
 {
     [DbContext(typeof(BlackBootDBContext))]
-    [Migration("20220605125646_IntialMigration")]
-    partial class IntialMigration
+    [Migration("20220605195506_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,6 +33,12 @@ namespace BlackBoot.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CrowdSaleScheduleId"), 1L, 1);
 
                     b.Property<int>("BonusCount")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("CurrentIncreaseRate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("CurrentInvestment")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -252,14 +258,15 @@ namespace BlackBoot.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("c41d18f0-1c4c-4123-b703-64d167d707b4"),
+                            UserId = new Guid("10ab1ef7-bf57-47cd-b5c4-30cf57d50a69"),
+                            BirthdayDate = new DateTime(2022, 6, 6, 0, 25, 6, 214, DateTimeKind.Local).AddTicks(4224),
                             Email = "Admin@BlackBoot.io",
                             FullName = "Admin",
                             Gender = (byte)1,
                             IsActive = true,
                             Nationality = "",
                             Password = "SELEtxzRpGEVskq+ddvHykdlDA2P8hB/2UHoo0uquvc=",
-                            RegistrationDate = new DateTime(2022, 6, 5, 17, 26, 46, 365, DateTimeKind.Local).AddTicks(3595)
+                            RegistrationDate = new DateTime(2022, 6, 6, 0, 25, 6, 214, DateTimeKind.Local).AddTicks(4192)
                         });
                 });
 
@@ -337,7 +344,7 @@ namespace BlackBoot.Data.Migrations
             modelBuilder.Entity("BlackBoot.Domain.Entities.Transaction", b =>
                 {
                     b.HasOne("BlackBoot.Domain.Entities.CrowdSaleSchedule", "CrowdSaleSchedule")
-                        .WithMany()
+                        .WithMany("Transactions")
                         .HasForeignKey("CrowdSaleScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -356,7 +363,7 @@ namespace BlackBoot.Data.Migrations
             modelBuilder.Entity("BlackBoot.Domain.Entities.UserJwtToken", b =>
                 {
                     b.HasOne("BlackBoot.Domain.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("UserJwtTokens")
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
@@ -371,11 +378,18 @@ namespace BlackBoot.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BlackBoot.Domain.Entities.CrowdSaleSchedule", b =>
+                {
+                    b.Navigation("Transactions");
+                });
+
             modelBuilder.Entity("BlackBoot.Domain.Entities.User", b =>
                 {
                     b.Navigation("Notifications");
 
                     b.Navigation("Transactions");
+
+                    b.Navigation("UserJwtTokens");
 
                     b.Navigation("WalletPools");
                 });

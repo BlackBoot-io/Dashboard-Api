@@ -61,6 +61,15 @@ namespace BlackBoot.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sorry! We reach to out investment goal. Please check your email for further investment phase..
+        /// </summary>
+        public static string CrowdSaleEnded {
+            get {
+                return ResourceManager.GetString("CrowdSaleEnded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to InvalidUser.
         /// </summary>
         public static string InvalidUser {
@@ -93,6 +102,15 @@ namespace BlackBoot.Services.Resources {
         public static string UserNotFound {
             get {
                 return ResourceManager.GetString("UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Transaction is failed! Please try again later..
+        /// </summary>
+        public static string TransactionFailed {
+            get {
+                return ResourceManager.GetString("TransactionFailed", resourceCulture);
             }
         }
     }

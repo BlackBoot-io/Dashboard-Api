@@ -9,24 +9,26 @@ public class ApiResultAttribute : ActionFilterAttribute
     public override void OnResultExecuting(ResultExecutingContext context)
     {
         if (context.Result is OkObjectResult okObjectResult && okObjectResult.Value is ActionResponse result)
-        {
-            context.Result = new JsonResult(result) { StatusCode = (int)result.StatusCode };
-        }
+            context.Result = new JsonResult(result)
+            {
+                StatusCode = (int)result.StatusCode
+            };
         else if (context.Result is OkResult okResult)
-        {
-            context.Result = new JsonResult(new ActionResponse()) { StatusCode = okResult.StatusCode };
-        }
+            context.Result = new JsonResult(new ActionResponse())
+            {
+                StatusCode = okResult.StatusCode
+            };
         else if (context.Result is ObjectResult badRequestObjectResult && badRequestObjectResult.StatusCode == 400)
         {
             string message = null;
             switch (badRequestObjectResult.Value)
             {
                 case ValidationProblemDetails validationProblemDetails:
-                    var errorMessages = validationProblemDetails.Errors.Select(p => new { Key = p.Key, Value = p.Value }).Distinct();
+                    var errorMessages = validationProblemDetails.Errors.Select(p => new { p.Key, p.Value }).Distinct();
                     message = JsonSerializer.Serialize(errorMessages);
                     break;
                 case SerializableError errors:
-                    var errorMessages2 = errors.Select(p => new { Key = p.Key, Value = p.Value }).Distinct();
+                    var errorMessages2 = errors.Select(p => new { p.Key, p.Value }).Distinct();
                     message = JsonSerializer.Serialize(errorMessages2);
                     break;
                 case var value when value != null && value is not ProblemDetails:

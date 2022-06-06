@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BlackBoot.Data.Migrations
 {
-    public partial class IntialMigration : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,9 +28,11 @@ namespace BlackBoot.Data.Migrations
                     Title = table.Column<string>(type: "varchar(50)", unicode: false, maxLength: 50, nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     MinimumBuy = table.Column<int>(type: "int", nullable: false),
+                    CurrentInvestment = table.Column<int>(type: "int", nullable: false),
                     InvestmentGoal = table.Column<int>(type: "int", nullable: false),
                     BonusCount = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CurrentIncreaseRate = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Description = table.Column<string>(type: "varchar(500)", unicode: false, maxLength: 500, nullable: true)
                 },
                 constraints: table =>
@@ -188,7 +190,7 @@ namespace BlackBoot.Data.Migrations
                 schema: "Base",
                 table: "User",
                 columns: new[] { "UserId", "BirthdayDate", "Email", "FullName", "Gender", "IsActive", "Nationality", "Password", "RegistrationDate", "WithdrawalWallet" },
-                values: new object[] { new Guid("c41d18f0-1c4c-4123-b703-64d167d707b4"), null, "Admin@BlackBoot.io", "Admin", (byte)1, true, "", "SELEtxzRpGEVskq+ddvHykdlDA2P8hB/2UHoo0uquvc=", new DateTime(2022, 6, 5, 17, 26, 46, 365, DateTimeKind.Local).AddTicks(3595), null });
+                values: new object[] { new Guid("10ab1ef7-bf57-47cd-b5c4-30cf57d50a69"), new DateTime(2022, 6, 6, 0, 25, 6, 214, DateTimeKind.Local).AddTicks(4224), "Admin@BlackBoot.io", "Admin", (byte)1, true, "", "SELEtxzRpGEVskq+ddvHykdlDA2P8hB/2UHoo0uquvc=", new DateTime(2022, 6, 6, 0, 25, 6, 214, DateTimeKind.Local).AddTicks(4192), null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notification_UserId",
