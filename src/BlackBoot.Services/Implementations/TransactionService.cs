@@ -48,9 +48,17 @@ public class TransactionService : ITransactionService
     public async Task<IActionResponse<IEnumerable<Transaction>>> GetAll(Guid userid)
         => new ActionResponse<IEnumerable<Transaction>>(await _transactions.Where(X => X.UserId == userid).AsNoTracking().ToListAsync());
 
-    public Task<IActionResponse<int>> GetUserBalance(Guid userid)
+    public async Task<IActionResponse<int>> GetUserBalance(Guid userid)
     {
-        throw new NotImplementedException();
+        var trxs = await _transactions.Where(X => X.UserId == userid &&
+                                             X.Status == TransactionStatus.ConfirmedByNetwork)
+                                       .AsNoTracking()
+                                       .ToListAsync();
+
+        var deposits = trxs.Where(X => X.Type == TransactionType.Deposit).Sum(X => X.TotalToken);
+        var withdraw = trxs.Where(X => X.Type == TransactionType.Withdraw).Sum(X => X.TotalToken);
+
+        return new ActionResponse<int>(deposits - withdraw);
     }
 
     public async Task<IActionResponse<Transaction>> Update(Transaction model)
