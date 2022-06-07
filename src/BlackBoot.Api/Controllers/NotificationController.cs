@@ -16,6 +16,6 @@ public class NotificationController : BaseController
         => Ok(await _notificationService.AddAsync(notification, cancellationToken));
 
     [HttpDelete]
-    public async Task<ActionResult<List<Notification>>> DeleteAsync(int id, CancellationToken cancellationToken)
-        => Ok(await _notificationService.DeleteAsync(id, cancellationToken));
+    public async Task<ActionResult<List<Notification>>> DeleteAsync(Guid userId, int id, CancellationToken cancellationToken)
+        => Ok(await _notificationService.DeleteAsync(userId, id, cancellationToken));
 }
