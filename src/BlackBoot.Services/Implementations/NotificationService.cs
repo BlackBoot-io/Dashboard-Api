@@ -13,28 +13,28 @@ public class NotificationService : INotificationService
 
     public async Task<IActionResponse<List<Notification>>> GetAllAsync(Guid userId, CancellationToken cancellationToken)
     {
-         var notifications = await _notifications.AsNoTracking()
-            .Where(x => x.Target == MessageTarget.All || x.UserId == userId)
-            .ToListAsync(cancellationToken);
+        var notifications = await _notifications.AsNoTracking()
+           .Where(x => x.Target == MessageTarget.All || x.UserId == userId)
+           .ToListAsync(cancellationToken);
         return new ActionResponse<List<Notification>>(notifications);
     }
     public async Task<IActionResponse<Notification>> AddAsync(Notification notification, CancellationToken cancellation)
     {
         await _notifications.AddAsync(notification, cancellation);
-        var dbResult = await _context.SaveChangesAsync();
+        var dbResult = await _context.SaveChangesAsync(cancellation);
         if (!dbResult.ToSaveChangeResult())
             return new ActionResponse<Notification>(ActionResponseStatusCode.ServerError);
         return new ActionResponse<Notification>(notification);
     }
 
-    public async Task<IActionResponse> DeleteAsync(int Id, CancellationToken cancellation)
+    public async Task<IActionResponse> DeleteAsync(Guid userId, int Id, CancellationToken cancellation)
     {
-        var notification = await _notifications.FindAsync(new object[] { Id }, cancellation);
+        var notification = await _notifications.FirstOrDefaultAsync(X => X.NotificationId == Id && X.UserId == userId, cancellation);
         if (notification is null)
             return new ActionResponse(ActionResponseStatusCode.NotFound);
 
         _notifications.Remove(notification);
-        var dbResult = await _context.SaveChangesAsync();
+        var dbResult = await _context.SaveChangesAsync(cancellation);
         if (!dbResult.ToSaveChangeResult())
             return new ActionResponse<Notification>(ActionResponseStatusCode.ServerError);
 
