@@ -132,7 +132,7 @@ public class AccountService : IAccountService
                new Claim("AccessToken",accessToken.Data.Token)
 
             }, JwtTokenType.RefreshToken);
-        UserTokenDto result = new ()
+        UserTokenDto result = new()
         {
             AccessToken = accessToken.Data.Token,
             AccessTokenExpireTime = DateTimeOffset.UtcNow.AddMinutes(accessToken.Data.TokenExpirationMinutes),
@@ -152,16 +152,12 @@ public class AccountService : IAccountService
 
     public async Task<IActionResponse<UserTokenDto>> SignupAsync(User user, CancellationToken cancellationToken = default)
     {
-        //user.Password = HashGenerator.Hash(user.Password);
+        user.Password = HashGenerator.Hash(user.Password);
+        var addedUser = await _userService.AddAsync(user, cancellationToken);
+        if (!addedUser.IsSuccess) return new ActionResponse<UserTokenDto>(ActionResponseStatusCode.BadRequest, AppResource.TransactionFailed);
 
-        //user = await _usersService.AddAsync(user, cancellationToken);
-
-        //var usertokens = await GenerateTokenAsync(user.UserId);
-        //await _userTokensService.AddUserTokenAsync(user.UserId, usertokens.AccessToken, usertokens.RefreshToken, cancellationToken);
-
-        //ApiResult<UserTokenDto> reaponse = new(true, ApiResultStatusCode.Success , usertokens);
-
-        //return reaponse;
-        return null; ;
+        var usertokens = await GenerateTokenAsync(user.UserId, cancellationToken);
+        await _userTokenService.AddUserTokenAsync(user.UserId, usertokens.AccessToken, usertokens.RefreshToken, cancellationToken);
+        return new ActionResponse<UserTokenDto>(usertokens);
     }
 }

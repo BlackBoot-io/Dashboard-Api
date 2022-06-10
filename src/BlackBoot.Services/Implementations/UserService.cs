@@ -18,6 +18,13 @@ public class UserService : IUserService
     public async Task<IActionResponse<User>> GetAsync(Guid id, CancellationToken cancellationToken = default)
         => new ActionResponse<User>(await _users.FindAsync(new object[] { id }, cancellationToken));
 
+    public async Task<IActionResponse<User>> AddAsync(User user, CancellationToken cancellationToken = default)
+    {
+        _users.AddAsync(user);
+        await _context.SaveChangesAsync();
+        return new ActionResponse<User>(user);
+    }
+
     public async Task<IActionResponse<bool>> UpdateAsync(User user, CancellationToken cancellationToken = default)
     {
         _users.Update(user);
