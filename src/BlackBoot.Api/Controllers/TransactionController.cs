@@ -18,7 +18,7 @@ public class TransactionController : BaseController
     public async Task<IActionResult> GetUserBalance(Guid userId)
         => Ok(await _transactionService.GetUserBalance(userId));
 
-    [HttpPost]
+    [HttpPost] 
     public async Task<IActionResult> Update(Transaction trx)
         => Ok(await _transactionService.Update(trx));
 }
