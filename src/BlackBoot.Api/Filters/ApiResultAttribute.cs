@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Text.Json;
 
-namespace BlackBoot.Api.Attributes;
+namespace BlackBoot.Api.Filters;
 
 public class ApiResultAttribute : ActionFilterAttribute
 {

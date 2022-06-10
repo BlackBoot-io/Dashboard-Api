@@ -8,18 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Attributes\**" />
     <Compile Remove="NewFolder\**" />
-    <Content Remove="Attributes\**" />
     <Content Remove="NewFolder\**" />
-    <EmbeddedResource Remove="Attributes\**" />
     <EmbeddedResource Remove="NewFolder\**" />
-    <None Remove="Attributes\**" />
     <None Remove="NewFolder\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Attributes\ApiResultAttribute.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -27,7 +27,11 @@ public class UserJwtTokenService : IUserJwtTokenService
         };
         await DeleteTokensWithSameRefreshTokenAsync(userId, refreshToken, cancellationToken);
         await _userJwtToken.AddAsync(model, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+
+        var dbResult = await _context.SaveChangesAsync();
+        if (!dbResult.ToSaveChangeResult())
+            return new ActionResponse(ActionResponseStatusCode.ServerError);
+        
         return new ActionResponse();
     }
     public async Task<IActionResponse> RevokeUserTokensAsync(Guid userId, string refreshToken, CancellationToken cancellationToken = default)
@@ -35,7 +39,12 @@ public class UserJwtTokenService : IUserJwtTokenService
         if (!string.IsNullOrEmpty(refreshToken))
             await DeleteTokensWithSameRefreshTokenAsync(userId, refreshToken, cancellationToken);
         await DeleteExpiredTokensAsync(cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+
+
+        var dbResult = await _context.SaveChangesAsync();
+        if (!dbResult.ToSaveChangeResult())
+            return new ActionResponse(ActionResponseStatusCode.ServerError);
+
         return new ActionResponse();
     }
     public async Task<IActionResponse<bool>> VerifyTokenAsync(Guid userId, string accessToken, CancellationToken cancellationToken = default)
