@@ -2,7 +2,7 @@
 
 namespace BlackBoot.Api.Controllers;
 
-[ApiController, Authorize, ApiResult]//, IdentityMapperFilter]
+[ApiController, Authorize, ApiResult, IdentityMapperFilter]
 [Route("[controller]/[action]")]
 public class BaseController : ControllerBase
 {

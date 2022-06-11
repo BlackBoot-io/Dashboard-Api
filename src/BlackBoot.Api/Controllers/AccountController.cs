@@ -7,12 +7,13 @@ public class AccountController : BaseController
     public AccountController(IAccountService accountService) => _accountService = accountService;
 
     [HttpPost, AllowAnonymous]
-    public async Task<IActionResult> LoginAsync(UserLoginDto userLoginDto, CancellationToken cancellationToken) => Ok(await _accountService.LoginAsync(userLoginDto, cancellationToken));
+    public async Task<IActionResult> LoginAsync(UserLoginDto userLoginDto, CancellationToken cancellationToken) 
+        => Ok(await _accountService.LoginAsync(userLoginDto, cancellationToken));
 
     [HttpPost, AllowAnonymous]
     public async Task<IActionResult> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken)
         => Ok(await _accountService.RefreshTokenAsync(refreshToken, cancellationToken));
-
+    
     [HttpPost]
     public async Task<IActionResult> ChangePasswordAsync(UserChangePasswordDto userChangePasswordDto, CancellationToken cancellationToken = default)
         => Ok(await _accountService.ChangePasswordAsync(userChangePasswordDto, cancellationToken));

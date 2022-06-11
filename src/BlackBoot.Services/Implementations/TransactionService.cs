@@ -18,13 +18,16 @@ public class TransactionService : ITransactionService
     }
     public async Task<IActionResponse<TransactionDto>> Add(Transaction trx)
     {
-        var wallet = await _walletPoolService.MapUserAsync(trx.UserId, trx.Network);
-        if (!wallet.IsSuccess)
-            return new ActionResponse<TransactionDto>(ActionResponseStatusCode.ServerError);
-
         var crowdSale = await _crowdSaleScheduleService.GetCurrentSale();
         if (crowdSale is null || !crowdSale.InvestmentIsAvailable())
             return new ActionResponse<TransactionDto>(ActionResponseStatusCode.Success, AppResource.CrowdSaleEnded);
+
+        if (crowdSale.MinimumBuy > trx.UsdtAmount)
+            return new ActionResponse<TransactionDto>(ActionResponseStatusCode.Success, string.Format(AppResource.MinimumPayment, crowdSale.MinimumBuy));
+
+        var wallet = await _walletPoolService.MapUserAsync(trx.UserId, trx.Network);
+        if (!wallet.IsSuccess)
+            return new ActionResponse<TransactionDto>(ActionResponseStatusCode.ServerError);
 
         trx.TransactionId = Guid.NewGuid();
         trx.BonusCount = crowdSale.BonusCount;
@@ -47,6 +50,9 @@ public class TransactionService : ITransactionService
 
     public async Task<IActionResponse<IEnumerable<Transaction>>> GetAll(Guid userid)
         => new ActionResponse<IEnumerable<Transaction>>(await _transactions.Where(X => X.UserId == userid).AsNoTracking().ToListAsync());
+
+    public async Task<IActionResponse<Transaction>> GetById(Guid transactionId)
+        => new ActionResponse<Transaction>(await GetTransactionById(transactionId));
 
     public async Task<IActionResponse<int>> GetUserBalance(Guid userid)
     {

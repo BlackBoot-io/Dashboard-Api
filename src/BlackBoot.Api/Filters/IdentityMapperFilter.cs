@@ -60,8 +60,8 @@ public class IdentityMapperFilter : ActionFilterAttribute, IAsyncActionFilter
                 StatusCode = ActionResponseStatusCode.ServerError,
                 Message = $"Internall error in authorize filter.{Environment.NewLine}{e.Message}"
             });
-
             await base.OnActionExecutionAsync(filterContext, next);
         }
+        await base.OnActionExecutionAsync(filterContext, next);
     }
 }
