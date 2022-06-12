@@ -18,9 +18,15 @@ public class UserService : IUserService
     public async Task<IActionResponse<User>> GetAsync(Guid id, CancellationToken cancellationToken = default)
         => new ActionResponse<User>(await _users.FindAsync(new object[] { id }, cancellationToken));
 
-    public Task<IActionResponse<Guid>> AddAsync(User user, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse<Guid>> AddAsync(User user, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await _users.AddAsync(user);
+
+        var dbResult = await _context.SaveChangesAsync();
+        if (!dbResult.ToSaveChangeResult())
+            return new ActionResponse<Guid>(ActionResponseStatusCode.ServerError);
+
+        return new ActionResponse<Guid>();
     }
     public async Task<IActionResponse<Guid>> UpdateAsync(User user, CancellationToken cancellationToken = default)
     {
@@ -36,5 +42,5 @@ public class UserService : IUserService
     public IActionResponse<bool> CheckPassword(User user, string password, CancellationToken cancellationToken = default)
         => new ActionResponse<bool>(HashGenerator.Hash(password) == user.Password);
 
- 
+
 }
