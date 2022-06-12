@@ -138,4 +138,7 @@
   <data name="MinimumPayment" xml:space="preserve">
     <value>Sorry! Minimum payment is ${0}.</value>
   </data>
+  <data name="NoWalletExist" xml:space="preserve">
+    <value>Sorry! There is no available wallet address in your selected network.</value>
+  </data>
 </root>

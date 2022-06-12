@@ -37,5 +37,6 @@ public class CrowdSaleSchedule : IEntity
 
     public bool InvestmentIsAvailable() => From <= DateTime.Now && InvestmentGoal > CurrentInvestment;
 
+    [JsonIgnore]
     public ICollection<Transaction> Transactions { get; set; }
 }

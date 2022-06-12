@@ -97,6 +97,15 @@ namespace BlackBoot.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sorry! There is no available wallet address in your selected network..
+        /// </summary>
+        public static string NoWalletExist {
+            get {
+                return ResourceManager.GetString("NoWalletExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PreviousPasswordsDoNotMatch.
         /// </summary>
         public static string PreviousPasswordsDoNotMatch {

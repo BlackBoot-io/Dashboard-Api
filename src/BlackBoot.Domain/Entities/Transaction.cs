@@ -1,23 +1,30 @@
-﻿namespace BlackBoot.Domain.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace BlackBoot.Domain.Entities;
 
 [Table(nameof(Transaction), Schema = nameof(EntitySchema.Payment))]
 public class Transaction : IEntity
 {
     public Guid TransactionId { get; set; }
 
+    [JsonIgnore]
     [ForeignKey(nameof(UserId))]
     public User User { get; set; }
+
     public Guid UserId { get; set; }
 
     [ForeignKey(nameof(CrowdSaleScheduleId))]
     public CrowdSaleSchedule CrowdSaleSchedule { get; set; }
+
     public int CrowdSaleScheduleId { get; set; }
 
     public BlockchainNetwork Network { get; set; }
+
     /// <summary>
     /// UsdtAmount
     /// </summary>
     public int UsdtAmount { get; set; }
+
     /// <summary>
     /// Crypto Amount
     /// </summary>
@@ -37,5 +44,5 @@ public class Transaction : IEntity
     public string TxId { get; set; }
 
     [NotMapped]
-    public int TotalToken => TotalToken + BonusCount;
+    public int TotalToken => TokenCount + BonusCount;
 }

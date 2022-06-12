@@ -20,14 +20,26 @@ public class TransactionService : ITransactionService
     {
         var crowdSale = await _crowdSaleScheduleService.GetCurrentSale();
         if (crowdSale is null || !crowdSale.InvestmentIsAvailable())
-            return new ActionResponse<TransactionDto>(ActionResponseStatusCode.Success, AppResource.CrowdSaleEnded);
+            return new ActionResponse<TransactionDto>
+            {
+                IsSuccess = false,
+                Message = AppResource.CrowdSaleEnded
+            };
 
         if (crowdSale.MinimumBuy > trx.UsdtAmount)
-            return new ActionResponse<TransactionDto>(ActionResponseStatusCode.Success, string.Format(AppResource.MinimumPayment, crowdSale.MinimumBuy));
+            return new ActionResponse<TransactionDto>
+            {
+                IsSuccess = false,
+                Message = string.Format(AppResource.MinimumPayment, crowdSale.MinimumBuy)
+            };
 
         var wallet = await _walletPoolService.MapUserAsync(trx.UserId, trx.Network);
         if (!wallet.IsSuccess)
-            return new ActionResponse<TransactionDto>(ActionResponseStatusCode.ServerError);
+            return new ActionResponse<TransactionDto>
+            {
+                IsSuccess = false,
+                Message = wallet.Message
+            };
 
         trx.TransactionId = Guid.NewGuid();
         trx.BonusCount = crowdSale.BonusCount;
@@ -35,7 +47,7 @@ public class TransactionService : ITransactionService
         trx.Date = DateTime.Now;
         trx.Status = TransactionStatus.Pending;
         trx.Type = TransactionType.Deposit;
-
+        _transactions.Add(trx);
         var dbResult = await _context.SaveChangesAsync();
         if (!dbResult.ToSaveChangeResult())
             return new ActionResponse<TransactionDto>(ActionResponseStatusCode.ServerError, AppResource.TransactionFailed);
@@ -52,7 +64,7 @@ public class TransactionService : ITransactionService
         => new ActionResponse<IEnumerable<Transaction>>(await _transactions.Where(X => X.UserId == userid).AsNoTracking().ToListAsync());
 
     public async Task<IActionResponse<Transaction>> GetById(Guid transactionId)
-        => new ActionResponse<Transaction>(await GetTransactionById(transactionId));
+        => new ActionResponse<Transaction>(await _transactions.Include(X => X.CrowdSaleSchedule).FirstOrDefaultAsync(X => X.TransactionId == transactionId));
 
     public async Task<IActionResponse<int>> GetUserBalance(Guid userid)
     {
@@ -67,26 +79,25 @@ public class TransactionService : ITransactionService
         return new ActionResponse<int>(deposits - withdraw);
     }
 
-    public async Task<IActionResponse<Transaction>> Update(Transaction model)
+    public async Task<IActionResponse<int>> Update(Transaction model)
     {
-        var trx = await GetTransactionById(model.TransactionId);
+        var trx = await _transactions.FirstOrDefaultAsync(X => X.TransactionId == model.TransactionId);
         if (trx is null)
-            return new ActionResponse<Transaction>(ActionResponseStatusCode.BadRequest);
+            return new ActionResponse<int>(ActionResponseStatusCode.BadRequest);
 
         trx.TokenCount = model.TokenCount;
         trx.ConfirmDate = model.ConfirmDate;
         trx.CryptoAmount = model.CryptoAmount;
         trx.UsdtAmount = model.UsdtAmount;
         trx.WalletAddress = model.WalletAddress;
+        trx.Status = model.Status;
+        trx.TxId = model.TxId;
 
         var dbResult = await _context.SaveChangesAsync();
         if (!dbResult.ToSaveChangeResult())
-            return new ActionResponse<Transaction>(ActionResponseStatusCode.ServerError, AppResource.TransactionFailed);
+            return new ActionResponse<int>(ActionResponseStatusCode.ServerError, AppResource.TransactionFailed);
 
-        return new ActionResponse<Transaction>(trx);
+        return new ActionResponse<int>();
     }
-
-    private async Task<Transaction> GetTransactionById(Guid trxId)
-        => await _transactions.FirstOrDefaultAsync(X => X.TransactionId == trxId);
 }
 

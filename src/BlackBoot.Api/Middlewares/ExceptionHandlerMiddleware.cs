@@ -22,7 +22,7 @@ public class ExceptionHandlerMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-        string message = String.Empty;
+        string message = string.Empty;
         HttpStatusCode httpStatusCode = HttpStatusCode.InternalServerError;
         ActionResponseStatusCode apiStatusCode = ActionResponseStatusCode.ServerError;
 
@@ -70,7 +70,6 @@ public class ExceptionHandlerMiddleware
             context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(json);
         }
-
         void SetUnAuthorizeResponse(Exception exception)
         {
             httpStatusCode = HttpStatusCode.Unauthorized;
