@@ -10,6 +10,7 @@ public class AccountController : BaseController
     public async Task<IActionResult> LoginAsync(UserLoginDto userLoginDto, CancellationToken cancellationToken) 
         => Ok(await _accountService.LoginAsync(userLoginDto, cancellationToken));
 
+    [HttpPost, AllowAnonymous]
     public async Task<IActionResult> LoginByGoogleAsync(string token, CancellationToken cancellationToken)
     => Ok(await _accountService.LoginByGoogleAsync(token, cancellationToken));
 
