@@ -256,15 +256,15 @@ namespace BlackBoot.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = new Guid("10ab1ef7-bf57-47cd-b5c4-30cf57d50a69"),
-                            BirthdayDate = new DateTime(2022, 6, 6, 0, 25, 6, 214, DateTimeKind.Local).AddTicks(4224),
+                            UserId = new Guid("5e6cf75c-5f8b-4314-a2f7-ac447aac2b35"),
+                            BirthdayDate = new DateTime(2022, 6, 12, 15, 34, 1, 639, DateTimeKind.Local).AddTicks(4966),
                             Email = "Admin@BlackBoot.io",
                             FullName = "Admin",
                             Gender = (byte)1,
                             IsActive = true,
                             Nationality = "",
                             Password = "SELEtxzRpGEVskq+ddvHykdlDA2P8hB/2UHoo0uquvc=",
-                            RegistrationDate = new DateTime(2022, 6, 6, 0, 25, 6, 214, DateTimeKind.Local).AddTicks(4192)
+                            RegistrationDate = new DateTime(2022, 6, 12, 15, 34, 1, 639, DateTimeKind.Local).AddTicks(4932)
                         });
                 });
 

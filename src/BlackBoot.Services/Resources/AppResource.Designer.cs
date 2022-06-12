@@ -79,11 +79,29 @@ namespace BlackBoot.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sorry! Minimum payment is ${0}..
+        /// </summary>
+        public static string MinimumPayment {
+            get {
+                return ResourceManager.GetString("MinimumPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to NewAndConfirmPasswordsDoNotMatch.
         /// </summary>
         public static string NewAndConfirmPasswordsDoNotMatch {
             get {
                 return ResourceManager.GetString("NewAndConfirmPasswordsDoNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorry! There is no available wallet address in your selected network..
+        /// </summary>
+        public static string NoWalletExist {
+            get {
+                return ResourceManager.GetString("NoWalletExist", resourceCulture);
             }
         }
         
@@ -97,20 +115,20 @@ namespace BlackBoot.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UserNotFound.
-        /// </summary>
-        public static string UserNotFound {
-            get {
-                return ResourceManager.GetString("UserNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Current Transaction is failed! Please try again later..
         /// </summary>
         public static string TransactionFailed {
             get {
                 return ResourceManager.GetString("TransactionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserNotFound.
+        /// </summary>
+        public static string UserNotFound {
+            get {
+                return ResourceManager.GetString("UserNotFound", resourceCulture);
             }
         }
     }

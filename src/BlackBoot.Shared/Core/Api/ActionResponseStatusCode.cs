@@ -4,21 +4,21 @@ namespace BlackBoot.Shared.Core;
 
 public enum ActionResponseStatusCode
 {
-    [Display(Name = "عملیات با موفقیت انجام شد")]
+    [Display(Name = "Success Action")]
     Success = 200,
 
-    [Display(Name = "خطایی در سرور رخ داده است")]
+    [Display(Name = "An error has been occured")]
     ServerError = 500,
 
-    [Display(Name = "پارامتر های ارسالی معتبر نیستند")]
+    [Display(Name = "Parameters are invalid.")]
     BadRequest = 400,
 
-    [Display(Name = "یافت نشد")]
+    [Display(Name = "Not fount")]
     NotFound = 404,
 
-    [Display(Name = "خطای احراز هویت")]
+    [Display(Name = "unauthorize user")]
     UnAuthorized = 401,
 
-    [Display(Name = "درخواست کننده مجاز به انجام این درخواست نیست")]
+    [Display(Name = "the request has been banned.")]
     Forbidden = 403
 }

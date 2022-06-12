@@ -8,6 +8,6 @@ public class CrowdSaleScheduleController : BaseController
         => _crowdSaleScheduleService = crowdSaleScheduleService;
 
     [HttpGet]
-    public async Task<ActionResult<List<CrowdSaleSchedule>>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
         => Ok(await _crowdSaleScheduleService.GetAllAsync(cancellationToken));
 }

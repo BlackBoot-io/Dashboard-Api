@@ -7,18 +7,26 @@ public class TransactionController : BaseController
         => _transactionService = transactionService;
 
     [HttpPost]
-    public async Task<IActionResult> Add(Transaction trx)
-        => Ok(await _transactionService.Add(trx));
+    public async Task<IActionResult> Add(Guid userId, [FromBody] Transaction trx)
+    {
+        trx.UserId = userId;
+        return Ok(await _transactionService.Add(trx));
+    }
 
     [HttpGet]
     public async Task<IActionResult> GetAll(Guid userId)
         => Ok(await _transactionService.GetAll(userId));
 
     [HttpGet]
+    public async Task<IActionResult> GetById(Guid transactionId)
+      => Ok(await _transactionService.GetById(transactionId));
+
+
+    [HttpGet]
     public async Task<IActionResult> GetUserBalance(Guid userId)
         => Ok(await _transactionService.GetUserBalance(userId));
 
-    [HttpPost] 
+    [HttpPost]
     public async Task<IActionResult> Update(Transaction trx)
         => Ok(await _transactionService.Update(trx));
 }

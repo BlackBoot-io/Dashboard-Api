@@ -18,24 +18,29 @@ public class UserService : IUserService
     public async Task<IActionResponse<User>> GetAsync(Guid id, CancellationToken cancellationToken = default)
         => new ActionResponse<User>(await _users.FindAsync(new object[] { id }, cancellationToken));
 
-    public async Task<IActionResponse<User>> AddAsync(User user, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse<Guid>> AddAsync(User user, CancellationToken cancellationToken = default)
     {
-        _users.AddAsync(user);
-        await _context.SaveChangesAsync();
-        return new ActionResponse<User>(user);
-    }
+        await _users.AddAsync(user);
 
-    public async Task<IActionResponse<bool>> UpdateAsync(User user, CancellationToken cancellationToken = default)
+        var dbResult = await _context.SaveChangesAsync();
+        if (!dbResult.ToSaveChangeResult())
+            return new ActionResponse<Guid>(ActionResponseStatusCode.ServerError);
+
+        return new ActionResponse<Guid>();
+    }
+    public async Task<IActionResponse<Guid>> UpdateAsync(User user, CancellationToken cancellationToken = default)
     {
         _users.Update(user);
 
         var dbResult = await _context.SaveChangesAsync();
         if (!dbResult.ToSaveChangeResult())
-            return new ActionResponse<bool>(ActionResponseStatusCode.ServerError);
+            return new ActionResponse<Guid>(ActionResponseStatusCode.ServerError);
 
-        return new ActionResponse<bool>();
+        return new ActionResponse<Guid>();
     }
 
     public IActionResponse<bool> CheckPassword(User user, string password, CancellationToken cancellationToken = default)
         => new ActionResponse<bool>(HashGenerator.Hash(password) == user.Password);
+
+
 }

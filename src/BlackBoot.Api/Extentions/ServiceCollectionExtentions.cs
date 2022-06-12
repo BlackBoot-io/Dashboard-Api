@@ -25,6 +25,14 @@ public static class ServiceCollectionExtentions
               options.DefaultSignInScheme = "Bearer";
               options.DefaultAuthenticateScheme = "Bearer";
           })
+        .AddGoogle(options =>
+        {
+            var googleAuthNSection = configuration.GetSection("Authentication:Google");
+
+            options.ClientId = googleAuthNSection["ClientId"];
+            options.ClientSecret = googleAuthNSection["ClientSecret"];
+            //options.CallbackPath = "";
+        })
         .AddJwtBearer(cfg =>
         {
             cfg.RequireHttpsMetadata = false;

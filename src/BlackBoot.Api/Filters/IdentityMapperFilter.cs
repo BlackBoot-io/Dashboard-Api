@@ -23,10 +23,7 @@ public class IdentityMapperFilter : ActionFilterAttribute, IAsyncActionFilter
             {
                 var userId = filterContext.HttpContext?.User?.Identity?.GetUserIdAsGuid();
                 if (userId is not null)
-                {
-                    if (filterContext.ActionArguments.ContainsKey("userId"))
-                        filterContext.ActionArguments["userId"] = userId;
-                }
+                    filterContext.ActionArguments["userId"] = userId;
                 else
                 {
                     filterContext.HttpContext.Response.StatusCode = 401;
@@ -60,8 +57,8 @@ public class IdentityMapperFilter : ActionFilterAttribute, IAsyncActionFilter
                 StatusCode = ActionResponseStatusCode.ServerError,
                 Message = $"Internall error in authorize filter.{Environment.NewLine}{e.Message}"
             });
-
             await base.OnActionExecutionAsync(filterContext, next);
         }
+        await base.OnActionExecutionAsync(filterContext, next);
     }
 }

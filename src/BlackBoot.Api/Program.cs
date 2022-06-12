@@ -1,6 +1,8 @@
 using BlackBoot.Api.Extentions;
 using BlackBoot.Api.Middlewares;
 using BlackBoot.Services;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -10,6 +12,14 @@ var configuration = builder.Configuration;
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddControllers();
 builder.Services.AddBlockBootDbContext(configuration);
+
+builder.Services.AddControllers().AddJsonOptions(opt =>
+{
+    opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
@@ -24,6 +34,8 @@ builder.Services.AddCors(options =>
 
     });
 });
+
+
 builder.Services.AddBlackBootAuthentication(configuration);
 builder.Services.RegisterApplicatioinServices();
 #endregion
@@ -40,16 +52,15 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseRouting();
 
+app.UseCors();
+
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseCors();
 
 app.UseEndpoints(config =>
 {
     config.MapControllers();
-});
-
+}); 
 app.Run();
 #endregion
 
