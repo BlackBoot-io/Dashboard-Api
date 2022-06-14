@@ -201,19 +201,16 @@ public class AccountService : IAccountService
     }
 
 
-    //public IActionResponse<UserTokenDto> RecoveryPassword(string email, IServiceProvider serviceProvider)
-    //{
-    //    EmailDto emailInfo = new EmailDto
-    //    {
-    //        Content = "Email Recovery",
-    //        Receiver = email,
-    //        Subject = "Recovery Password"
-    //    };
+    public IActionResponse<bool> RecoveryPassword(string email)
+    {
+        EmailDto emailInfo = new EmailDto
+        {
+            Content = "Email Recovery",
+            Receiver = email,
+            Subject = "Recovery Password"
+        };
 
-    //    var response = _emailGatwayAdapter.Send(emailInfo, serviceProvider);
-
-    //}
-
-
-
+        var response = _emailGatwayAdapter.Send(emailInfo);
+        return new ActionResponse<bool>(response.Data);
+    }
 }

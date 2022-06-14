@@ -11,4 +11,5 @@ public interface IAccountService : IScopedDependency
     Task<IActionResponse<Guid>> ChangePasswordAsync(UserChangePasswordDto userChangePasswordDto, CancellationToken cancellationToken = default);
     Task<IActionResponse<UserTokenDto>> SignupAsync(User user, CancellationToken cancellationToken = default);
     Task<IActionResponse<Guid>> UpdateWalletAsync(string withdrawalWallet, CancellationToken cancellationToken = default);
+    IActionResponse<bool> RecoveryPassword(string email);
 }
