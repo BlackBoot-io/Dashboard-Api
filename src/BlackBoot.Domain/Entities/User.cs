@@ -3,6 +3,9 @@
 [Table(nameof(User), Schema = nameof(EntitySchema.Base))]
 public class User : IEntity
 {
+    public User() => UserId = Guid.NewGuid();
+
+       
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid UserId { get; set; }
 

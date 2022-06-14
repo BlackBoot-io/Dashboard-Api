@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Google.Apis.Auth;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
+using static Google.Apis.Auth.GoogleJsonWebSignature;
 
 namespace BlackBoot.Services.Implementations;
 
@@ -10,15 +13,18 @@ public class AccountService : IAccountService
     private readonly IUserJwtTokenService _userTokenService;
     private readonly IJwtTokenFactory _tokenFactoryService;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IConfiguration _configuration;
     public AccountService(IUserService userService,
                           IUserJwtTokenService userTokenService,
                           IJwtTokenFactory tokenFactoryService,
-                          IHttpContextAccessor httpContextAccessor)
+                          IHttpContextAccessor httpContextAccessor,
+                          IConfiguration configuration)
     {
         _userService = userService;
         _userTokenService = userTokenService;
         _tokenFactoryService = tokenFactoryService;
         _httpContextAccessor = httpContextAccessor;
+        _configuration = configuration;
     }
 
     public async Task<IActionResponse<UserTokenDto>> LoginAsync(UserLoginDto item, CancellationToken cancellationToken = default)
@@ -31,7 +37,35 @@ public class AccountService : IAccountService
 
         var usertokens = await GenerateTokenAsync(user.Data.UserId, cancellationToken);
         await _userTokenService.AddUserTokenAsync(user.Data.UserId, usertokens.AccessToken, usertokens.RefreshToken, cancellationToken);
-        return new ActionResponse<UserTokenDto>(usertokens); ;
+        return new ActionResponse<UserTokenDto>(usertokens);
+    }
+    public async Task<IActionResponse<UserTokenDto>> LoginByGoogleAsync(string token, CancellationToken cancellationToken)
+    {
+        try
+        {
+            GoogleJsonWebSignature.ValidationSettings settings = new();
+            settings.Audience = new List<string>() { _configuration.GetSection("Authentication:Google:ClientId").Value };
+            var payload = await GoogleJsonWebSignature.ValidateAsync(token, settings);
+
+            var user = await _userService.GetByEmailAsync(payload.Email, cancellationToken);
+            if (user.Data is null)
+            {
+                user.Data = new User
+                {
+                    Email = payload.Email,
+                    FullName = payload.Name,
+                };
+                await _userService.AddAsync(user.Data, cancellationToken);
+            }
+            var usertokens = await GenerateTokenAsync(user.Data.UserId, cancellationToken);
+            await _userTokenService.AddUserTokenAsync(user.Data.UserId, usertokens.AccessToken, usertokens.RefreshToken, cancellationToken);
+            return new ActionResponse<UserTokenDto>(usertokens);
+
+        }
+        catch (Exception ex) when (ex is InvalidJwtException)
+        {
+            return new ActionResponse<UserTokenDto>(ActionResponseStatusCode.BadRequest);
+        }
     }
     public async Task<IActionResponse> LogoutAsync(string refreshtoken, CancellationToken cancellationToken = default)
     {
@@ -66,14 +100,14 @@ public class AccountService : IAccountService
             Nationality = user.Data.Nationality,
         });
     }
-    public async Task<IActionResponse<bool>> UpdateProfileAsync(UserDto userDto, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse<Guid>> UpdateProfileAsync(UserDto userDto, CancellationToken cancellationToken = default)
     {
         var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.GetUserIdAsGuid();
         if (userId is null)
-            return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.InvalidUser);
+            return new ActionResponse<Guid>(ActionResponseStatusCode.NotFound, AppResource.InvalidUser);
         var userResponse = await _userService.GetAsync(userId.Value, cancellationToken);
         var user = userResponse.Data;
-        if (user == null) return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.InvalidUser);
+        if (user == null) return new ActionResponse<Guid>(ActionResponseStatusCode.NotFound, AppResource.InvalidUser);
 
         #region Update Profile
         user.Email = userDto.Email;
@@ -85,34 +119,34 @@ public class AccountService : IAccountService
 
         return await _userService.UpdateAsync(user, cancellationToken);
     }
-    public async Task<IActionResponse<bool>> ChangePasswordAsync(UserChangePasswordDto userChangePasswordDto, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse<Guid>> ChangePasswordAsync(UserChangePasswordDto userChangePasswordDto, CancellationToken cancellationToken = default)
     {
         if (userChangePasswordDto.ConfirmPassword != userChangePasswordDto.NewPassword)
-            return new ActionResponse<bool>(ActionResponseStatusCode.BadRequest, AppResource.NewAndConfirmPasswordsDoNotMatch);
+            return new ActionResponse<Guid>(ActionResponseStatusCode.BadRequest, AppResource.NewAndConfirmPasswordsDoNotMatch);
 
         var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.GetUserIdAsGuid();
-        if (userId is null) return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
+        if (userId is null) return new ActionResponse<Guid>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
 
         var userGetResponse = await _userService.GetAsync(userId.Value, cancellationToken);
         var user = userGetResponse.Data;
-        if (user == null) return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
+        if (user == null) return new ActionResponse<Guid>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
 
         if (HashGenerator.Hash(userChangePasswordDto.OldPassword) != user.Password)
-            return new ActionResponse<bool>(ActionResponseStatusCode.Forbidden, AppResource.PreviousPasswordsDoNotMatch);
+            return new ActionResponse<Guid>(ActionResponseStatusCode.Forbidden, AppResource.PreviousPasswordsDoNotMatch);
 
         var hashedNewPassword = HashGenerator.Hash(userChangePasswordDto.NewPassword);
         user.Password = hashedNewPassword;
 
         return await _userService.UpdateAsync(user, cancellationToken);
     }
-    public async Task<IActionResponse<bool>> UpdateWalletAsync(string withdrawalWallet, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse<Guid>> UpdateWalletAsync(string withdrawalWallet, CancellationToken cancellationToken = default)
     {
         var userId = _httpContextAccessor?.HttpContext?.User?.Identity?.GetUserIdAsGuid();
-        if (userId is null) return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
+        if (userId is null) return new ActionResponse<Guid>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
 
         var userGetResponse = await _userService.GetAsync(userId.Value, cancellationToken);
         var user = userGetResponse.Data;
-        if (user == null) return new ActionResponse<bool>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
+        if (user == null) return new ActionResponse<Guid>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
 
         user.WithdrawalWallet = withdrawalWallet;
 
@@ -132,7 +166,7 @@ public class AccountService : IAccountService
                new Claim("AccessToken",accessToken.Data.Token)
 
             }, JwtTokenType.RefreshToken);
-        UserTokenDto result = new ()
+        UserTokenDto result = new()
         {
             AccessToken = accessToken.Data.Token,
             AccessTokenExpireTime = DateTimeOffset.UtcNow.AddMinutes(accessToken.Data.TokenExpirationMinutes),
@@ -152,8 +186,13 @@ public class AccountService : IAccountService
 
     public async Task<IActionResponse<UserTokenDto>> SignupAsync(User user, CancellationToken cancellationToken = default)
     {
-        //user.Password = HashGenerator.Hash(user.Password);
+        user.Password = HashGenerator.Hash(user.Password);
+        var addedUser = await _userService.AddAsync(user, cancellationToken);
+        if (!addedUser.IsSuccess) return new ActionResponse<UserTokenDto>(ActionResponseStatusCode.BadRequest, AppResource.TransactionFailed);
 
+        var usertokens = await GenerateTokenAsync(user.UserId, cancellationToken);
+        await _userTokenService.AddUserTokenAsync(user.UserId, usertokens.AccessToken, usertokens.RefreshToken, cancellationToken);
+        return new ActionResponse<UserTokenDto>(usertokens);
         //user = await _usersService.AddAsync(user, cancellationToken);
 
         //var usertokens = await GenerateTokenAsync(user.UserId);
@@ -164,4 +203,7 @@ public class AccountService : IAccountService
         //return reaponse;
         return null;
     }
+
+
+    
 }
