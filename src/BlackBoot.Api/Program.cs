@@ -17,7 +17,6 @@ builder.Services.AddControllers().AddJsonOptions(opt =>
 {
     opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-    opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
 });
 
 builder.Services.AddEndpointsApiExplorer();
@@ -31,10 +30,8 @@ builder.Services.AddCors(options =>
         .AllowAnyHeader()
         .AllowAnyMethod()
         .AllowCredentials();
-
     });
 });
-
 
 builder.Services.AddBlackBootAuthentication(configuration);
 builder.Services.RegisterApplicatioinServices();
@@ -60,7 +57,7 @@ app.UseAuthorization();
 app.UseEndpoints(config =>
 {
     config.MapControllers();
-}); 
+});
 app.Run();
 #endregion
 

@@ -10,7 +10,6 @@ public class CrowdSaleScheduleService : ICrowdSaleScheduleService
     public async Task<IActionResponse<List<CrowdSaleSchedule>>> GetAllAsync(CancellationToken cancellationToken)
         => new ActionResponse<List<CrowdSaleSchedule>>(await _crowdSaleSchedules.AsNoTracking().ToListAsync(cancellationToken));
 
-    public async Task<CrowdSaleSchedule> GetCurrentSale()
-      => await _crowdSaleSchedules.FirstOrDefaultAsync(X => X.IsActive);
-
+    public async Task<IActionResponse<CrowdSaleSchedule>> GetCurrentSaleAsync()
+      => new ActionResponse<CrowdSaleSchedule>(await _crowdSaleSchedules.FirstOrDefaultAsync(X => X.IsActive));
 }

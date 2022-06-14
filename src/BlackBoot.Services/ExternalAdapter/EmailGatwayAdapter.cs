@@ -1,56 +1,26 @@
 ﻿using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
-using MimeKit;
 using sib_api_v3_sdk.Api;
 using sib_api_v3_sdk.Client;
 using sib_api_v3_sdk.Model;
 
 namespace BlackBoot.Services.ExternalAdapter;
 
-public class EmailGatwayAdapter
+public class EmailGatwayAdapter : IEmailGatewayAdapter, IScopedDependency
 {
-    private static bool SendWithGmail(IConfiguration configuration, EmailDto email)
-    {
-        try
-        {
-            #region Get Mail Template
-            var template = @"Test Email Template";
-            #endregion
+    private readonly IConfiguration _configuration;
+    public EmailGatwayAdapter(IConfiguration configuration)
+        => _configuration = configuration;
 
-            var bodyBuilder = new BodyBuilder();
-            var mailMessage = new MimeMessage();
-            mailMessage.From.Add(new MailboxAddress("inbox", configuration["EmailSettings:Username"]));
-            mailMessage.To.Add(new MailboxAddress("inbox", email.Receiver));
-            mailMessage.Subject = email.Subject;
-
-            bodyBuilder.HtmlBody = template.Replace("@@@", email.Content);
-
-            mailMessage.Body = bodyBuilder.ToMessageBody();
-
-            using (var smtpClient = new SmtpClient())
-            {
-                smtpClient.Connect(configuration["EmailSettings:Server"], int.Parse(configuration["EmailSettings:Port"]), bool.Parse(configuration["EmailSettings:EnableSsl"]));
-                smtpClient.Authenticate(configuration["EmailSettings:Username"], configuration["EmailSettings:Password"]);
-                smtpClient.Send(mailMessage);
-                smtpClient.Disconnect(true);
-            }
-
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-    private static (bool, string) SendWithSendinBlue(EmailDto email, IConfiguration configuration)
+    private (bool, string) SendWithSendinBlue(EmailDto email)
     {
         try
         {
             var apiInstance = new TransactionalEmailsApi();
             if (!Configuration.Default.ApiKey.ContainsKey("api-key"))
-                Configuration.Default.ApiKey.Add("api-key", configuration["EmailSettings:SendinBlueApiKey"]);
+                Configuration.Default.ApiKey.Add("api-key", _configuration["EmailSettings:SendinBlueApiKey"]);
 
-            SendSmtpEmailSender emailSender = new(configuration["EmailSettings:SenderName"], configuration["EmailSettings:Sender"]);
+            SendSmtpEmailSender emailSender = new(_configuration["EmailSettings:SenderName"], _configuration["EmailSettings:Sender"]);
             SendSmtpEmailTo to = new(email.Receiver, email.Receiver);
             List<SendSmtpEmailTo> emailReceiver = new() { to };
 
@@ -90,13 +60,12 @@ public class EmailGatwayAdapter
         }
     }
 
-    public static IActionResponse<bool> Send(EmailDto email, IServiceProvider serviceProvider)
+    public IActionResponse<bool> Send(EmailDto email)
     {
-        ActionResponse<bool> response = new ();
+        ActionResponse<bool> response = new();
         try
         {
-            var configuration = (IConfiguration)serviceProvider.GetService(typeof(IConfiguration));
-            var sendResult = SendWithSendinBlue(email, configuration);
+            var sendResult = SendWithSendinBlue(email);
             if (sendResult.Item1)
             {
                 response.Data = true;

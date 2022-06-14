@@ -13,7 +13,7 @@ public enum ActionResponseStatusCode
     [Display(Name = "Parameters are invalid.")]
     BadRequest = 400,
 
-    [Display(Name = "Not fount")]
+    [Display(Name = "Not found")]
     NotFound = 404,
 
     [Display(Name = "unauthorize user")]

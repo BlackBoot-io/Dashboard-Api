@@ -7,8 +7,10 @@ public class Notification
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int NotificationId { get; set; }
 
+    [JsonIgnore]
     [ForeignKey(nameof(UserId))]
     public User User { get; set; }
+
     public Guid? UserId { get; set; }
 
     public MessageTarget Target { get; set; }
