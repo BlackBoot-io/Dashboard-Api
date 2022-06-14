@@ -41,4 +41,8 @@ public class AccountController : BaseController
     [HttpPost]
     public async Task<IActionResult> SignupAsync(User user, CancellationToken cancellationToken)
         => Ok(await _accountService.SignupAsync(user, cancellationToken));
+
+    //[HttpPost]
+    //public async Task<IActionResult> RecoveryPassword(string email, CancellationToken cancellationToken)
+    //    => Ok(await _accountService.());
 }

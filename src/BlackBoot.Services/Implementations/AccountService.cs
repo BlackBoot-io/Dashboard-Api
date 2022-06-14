@@ -1,4 +1,5 @@
-﻿using Google.Apis.Auth;
+﻿using BlackBoot.Services.ExternalAdapter;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
@@ -8,23 +9,26 @@ namespace BlackBoot.Services.Implementations;
 
 public class AccountService : IAccountService
 {
-
+    
     private readonly IUserService _userService;
     private readonly IUserJwtTokenService _userTokenService;
     private readonly IJwtTokenFactory _tokenFactoryService;
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IConfiguration _configuration;
+    private readonly IConfiguration _configuration; 
+ 
+    private readonly EmailGatwayAdapter _emailGatwayAdapter;
+
     public AccountService(IUserService userService,
                           IUserJwtTokenService userTokenService,
                           IJwtTokenFactory tokenFactoryService,
                           IHttpContextAccessor httpContextAccessor,
-                          IConfiguration configuration)
+                          IConfiguration configuration )
     {
         _userService = userService;
         _userTokenService = userTokenService;
         _tokenFactoryService = tokenFactoryService;
         _httpContextAccessor = httpContextAccessor;
-        _configuration = configuration;
+        _configuration = configuration; 
     }
 
     public async Task<IActionResponse<UserTokenDto>> LoginAsync(UserLoginDto item, CancellationToken cancellationToken = default)
@@ -188,22 +192,28 @@ public class AccountService : IAccountService
     {
         user.Password = HashGenerator.Hash(user.Password);
         var addedUser = await _userService.AddAsync(user, cancellationToken);
-        if (!addedUser.IsSuccess) return new ActionResponse<UserTokenDto>(ActionResponseStatusCode.BadRequest, AppResource.TransactionFailed);
 
+        if (!addedUser.IsSuccess) 
+            return new ActionResponse<UserTokenDto>(ActionResponseStatusCode.BadRequest, AppResource.TransactionFailed);
         var usertokens = await GenerateTokenAsync(user.UserId, cancellationToken);
         await _userTokenService.AddUserTokenAsync(user.UserId, usertokens.AccessToken, usertokens.RefreshToken, cancellationToken);
         return new ActionResponse<UserTokenDto>(usertokens);
-        //user = await _usersService.AddAsync(user, cancellationToken);
-
-        //var usertokens = await GenerateTokenAsync(user.UserId);
-        //await _userTokensService.AddUserTokenAsync(user.UserId, usertokens.AccessToken, usertokens.RefreshToken, cancellationToken);
-
-        //ApiResult<UserTokenDto> reaponse = new(true, ApiResultStatusCode.Success , usertokens);
-
-        //return reaponse;
-        return null;
     }
 
 
-    
+    //public IActionResponse<UserTokenDto> RecoveryPassword(string email, IServiceProvider serviceProvider)
+    //{
+    //    EmailDto emailInfo = new EmailDto
+    //    {
+    //        Content = "Email Recovery",
+    //        Receiver = email,
+    //        Subject = "Recovery Password"
+    //    };
+
+    //    var response = _emailGatwayAdapter.Send(emailInfo, serviceProvider);
+
+    //}
+
+
+
 }
