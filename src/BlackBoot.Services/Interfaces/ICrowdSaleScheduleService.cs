@@ -2,6 +2,6 @@
 
 public interface ICrowdSaleScheduleService : IScopedDependency
 {
-    Task<CrowdSaleSchedule> GetCurrentSale();
+    Task<IActionResponse<CrowdSaleSchedule>> GetCurrentSaleAsync();
     Task<IActionResponse<List<CrowdSaleSchedule>>> GetAllAsync(CancellationToken cancellationToken);
 }

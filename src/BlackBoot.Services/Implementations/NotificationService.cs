@@ -18,13 +18,15 @@ public class NotificationService : INotificationService
            .ToListAsync(cancellationToken);
         return new ActionResponse<List<Notification>>(notifications);
     }
-    public async Task<IActionResponse<Notification>> AddAsync(Notification notification, CancellationToken cancellation)
+    public async Task<IActionResponse<int>> AddAsync(Notification notification, CancellationToken cancellation)
     {
+        notification.Date = DateTime.UtcNow;
         await _notifications.AddAsync(notification, cancellation);
         var dbResult = await _context.SaveChangesAsync(cancellation);
         if (!dbResult.ToSaveChangeResult())
-            return new ActionResponse<Notification>(ActionResponseStatusCode.ServerError);
-        return new ActionResponse<Notification>(notification);
+            return new ActionResponse<int>(ActionResponseStatusCode.ServerError);
+
+        return new ActionResponse<int>(notification.NotificationId);
     }
 
     public async Task<IActionResponse> DeleteAsync(Guid userId, int Id, CancellationToken cancellation)

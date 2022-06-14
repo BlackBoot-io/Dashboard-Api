@@ -18,19 +18,19 @@ public class TransactionService : ITransactionService
     }
     public async Task<IActionResponse<TransactionDto>> Add(Transaction trx)
     {
-        var crowdSale = await _crowdSaleScheduleService.GetCurrentSale();
-        if (crowdSale is null || !crowdSale.InvestmentIsAvailable())
+        var crowdSale = await _crowdSaleScheduleService.GetCurrentSaleAsync();
+        if (crowdSale.Data is null || !crowdSale.Data.InvestmentIsAvailable())
             return new ActionResponse<TransactionDto>
             {
                 IsSuccess = false,
                 Message = AppResource.CrowdSaleEnded
             };
 
-        if (crowdSale.MinimumBuy > trx.UsdtAmount)
+        if (crowdSale.Data.MinimumBuy > trx.UsdtAmount)
             return new ActionResponse<TransactionDto>
             {
                 IsSuccess = false,
-                Message = string.Format(AppResource.MinimumPayment, crowdSale.MinimumBuy)
+                Message = string.Format(AppResource.MinimumPayment, crowdSale.Data.MinimumBuy)
             };
 
         var wallet = await _walletPoolService.MapUserAsync(trx.UserId, trx.Network);
@@ -42,8 +42,8 @@ public class TransactionService : ITransactionService
             };
 
         trx.TransactionId = Guid.NewGuid();
-        trx.BonusCount = crowdSale.BonusCount;
-        trx.CrowdSaleScheduleId = crowdSale.CrowdSaleScheduleId;
+        trx.BonusCount = crowdSale.Data.BonusCount;
+        trx.CrowdSaleScheduleId = crowdSale.Data.CrowdSaleScheduleId;
         trx.Date = DateTime.Now;
         trx.Status = TransactionStatus.Pending;
         trx.Type = TransactionType.Deposit;
