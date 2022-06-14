@@ -43,6 +43,6 @@ public class AccountController : BaseController
         => Ok(await _accountService.SignupAsync(user, cancellationToken));
 
     [HttpPost]
-    public async Task<IActionResult> RecoveryPassword(string email, CancellationToken cancellationToken)
-        => Ok(await _accountService.());
+    public IActionResult RecoveryPassword(string email)
+        => Ok(_accountService.RecoveryPassword(email));
 }
