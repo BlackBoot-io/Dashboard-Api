@@ -10,7 +10,7 @@ public class NotificationService : INotificationService
         _context = context;
         _notifications = context.Set<Notification>();
     }
-
+    
     public async Task<IActionResponse<List<Notification>>> GetAllAsync(Guid userId, CancellationToken cancellationToken)
     {
         var notifications = await _notifications.AsNoTracking()
@@ -28,7 +28,6 @@ public class NotificationService : INotificationService
 
         return new ActionResponse<int>(notification.NotificationId);
     }
-
     public async Task<IActionResponse> DeleteAsync(Guid userId, int Id, CancellationToken cancellation)
     {
         var notification = await _notifications.FirstOrDefaultAsync(X => X.NotificationId == Id && X.UserId == userId, cancellation);
