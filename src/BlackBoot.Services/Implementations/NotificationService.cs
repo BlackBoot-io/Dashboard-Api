@@ -10,7 +10,7 @@ public class NotificationService : INotificationService
         _context = context;
         _notifications = context.Set<Notification>();
     }
-    
+
     public async Task<IActionResponse<List<Notification>>> GetAllAsync(Guid userId, CancellationToken cancellationToken)
     {
         var notifications = await _notifications.AsNoTracking()
@@ -41,4 +41,6 @@ public class NotificationService : INotificationService
 
         return new ActionResponse();
     }
+    public async Task<IActionResponse> CountAsync(Guid userId, CancellationToken cancellation) =>
+        new ActionResponse<int>(await _notifications.CountAsync(X => X.UserId == userId, cancellation));
 }
