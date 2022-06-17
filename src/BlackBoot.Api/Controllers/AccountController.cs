@@ -30,9 +30,9 @@ public class AccountController : BaseController
     public async Task<IActionResult> UpdateProfileAsync(Guid userId, UserDto userDto, CancellationToken cancellationToken = default)
         => Ok(await _accountService.UpdateProfileAsync(userId, userDto, cancellationToken));
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateWalletAsync(Guid userId, string withdrawalWallet, CancellationToken cancellationToken = default)
-        => Ok(await _accountService.UpdateWalletAsync(userId, withdrawalWallet, cancellationToken));
+    [HttpPost]
+    public async Task<IActionResult> UpdateWalletAsync(Guid userId, UserUpdateWalletDto userUpdateWalletDto, CancellationToken cancellationToken = default)
+        => Ok(await _accountService.UpdateWalletAsync(userId, userUpdateWalletDto, cancellationToken));
 
     [HttpDelete]
     public async Task<IActionResult> LogoutAsync(Guid userId, string refreshToken, CancellationToken cancellationToken)

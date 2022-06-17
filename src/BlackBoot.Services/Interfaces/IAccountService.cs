@@ -10,6 +10,6 @@ public interface IAccountService : IScopedDependency
     Task<IActionResponse<Guid>> UpdateProfileAsync(Guid userId, UserDto userDto, CancellationToken cancellationToken = default);
     Task<IActionResponse<Guid>> ChangePasswordAsync(Guid userId,UserChangePasswordDto userChangePasswordDto, CancellationToken cancellationToken = default);
     Task<IActionResponse<UserTokenDto>> SignupAsync(User user, CancellationToken cancellationToken = default);
-    Task<IActionResponse<Guid>> UpdateWalletAsync(Guid userId,string withdrawalWallet, CancellationToken cancellationToken = default);
+    Task<IActionResponse<Guid>> UpdateWalletAsync(Guid userId, UserUpdateWalletDto userUpdateWalletDto, CancellationToken cancellationToken = default);
     Task<IActionResponse<bool>> RecoveryPassword(Guid userId, string email);
 }

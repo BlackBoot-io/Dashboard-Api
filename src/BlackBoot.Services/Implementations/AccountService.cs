@@ -97,6 +97,7 @@ public class AccountService : IAccountService
             Gender = user.Data.Gender,
             BirthdayDate = user.Data.BirthdayDate.Value,
             Nationality = user.Data.Nationality,
+            WithdrawalWallet = user.Data.WithdrawalWallet
         });
     }
     public async Task<IActionResponse<Guid>> UpdateProfileAsync(Guid userId, UserDto userDto, CancellationToken cancellationToken = default)
@@ -132,13 +133,13 @@ public class AccountService : IAccountService
 
         return await _userService.UpdateAsync(user, cancellationToken);
     }
-    public async Task<IActionResponse<Guid>> UpdateWalletAsync(Guid userId, string withdrawalWallet, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse<Guid>> UpdateWalletAsync(Guid userId, UserUpdateWalletDto userUpdateWalletDto, CancellationToken cancellationToken = default)
     {
         var userGetResponse = await _userService.GetAsync(userId, cancellationToken);
         var user = userGetResponse.Data;
         if (user == null) return new ActionResponse<Guid>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
 
-        user.WithdrawalWallet = withdrawalWallet;
+        user.WithdrawalWallet = userUpdateWalletDto.WithdrawalWallet;
 
         return await _userService.UpdateAsync(user, cancellationToken);
     }
