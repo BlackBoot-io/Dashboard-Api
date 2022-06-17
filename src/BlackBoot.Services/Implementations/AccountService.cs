@@ -95,12 +95,13 @@ public class AccountService : IAccountService
             Email = user.Data.Email,
             FullName = user.Data.FullName,
             Gender = user.Data.Gender,
+            BirthdayDate = user.Data.BirthdayDate.Value,
             Nationality = user.Data.Nationality,
         });
     }
-    public async Task<IActionResponse<Guid>> UpdateProfileAsync(UserDto userDto, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse<Guid>> UpdateProfileAsync(Guid userId, UserDto userDto, CancellationToken cancellationToken = default)
     {
-        var userResponse = await _userService.GetAsync(userDto.UserId, cancellationToken);
+        var userResponse = await _userService.GetAsync(userId, cancellationToken);
         var user = userResponse.Data;
         if (user == null) return new ActionResponse<Guid>(ActionResponseStatusCode.NotFound, AppResource.InvalidUser);
 
