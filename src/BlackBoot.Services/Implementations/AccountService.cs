@@ -117,7 +117,7 @@ public class AccountService : IAccountService
     }
     public async Task<IActionResponse<Guid>> ChangePasswordAsync(Guid userId, UserChangePasswordDto userChangePasswordDto, CancellationToken cancellationToken = default)
     {
-        if (userChangePasswordDto.ConfirmPassword != userChangePasswordDto.NewPassword)
+        if (userChangePasswordDto.ConfirmNewPassword != userChangePasswordDto.NewPassword)
             return new ActionResponse<Guid>(ActionResponseStatusCode.BadRequest, AppResource.NewAndConfirmPasswordsDoNotMatch);
 
         var userGetResponse = await _userService.GetAsync(userId, cancellationToken);
