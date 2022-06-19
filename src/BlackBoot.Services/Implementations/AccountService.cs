@@ -95,13 +95,14 @@ public class AccountService : IAccountService
             Email = user.Data.Email,
             FullName = user.Data.FullName,
             Gender = user.Data.Gender,
+            BirthdayDate = user.Data.BirthdayDate.Value,
             Nationality = user.Data.Nationality,
             WalletAddress =user.Data.WithdrawalWallet
         });
     }
-    public async Task<IActionResponse<Guid>> UpdateProfileAsync(UserDto userDto, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse<Guid>> UpdateProfileAsync(Guid userId, UserDto userDto, CancellationToken cancellationToken = default)
     {
-        var userResponse = await _userService.GetAsync(userDto.UserId, cancellationToken);
+        var userResponse = await _userService.GetAsync(userId, cancellationToken);
         var user = userResponse.Data;
         if (user == null) return new ActionResponse<Guid>(ActionResponseStatusCode.NotFound, AppResource.InvalidUser);
 
@@ -117,7 +118,7 @@ public class AccountService : IAccountService
     }
     public async Task<IActionResponse<Guid>> ChangePasswordAsync(Guid userId, UserChangePasswordDto userChangePasswordDto, CancellationToken cancellationToken = default)
     {
-        if (userChangePasswordDto.ConfirmPassword != userChangePasswordDto.NewPassword)
+        if (userChangePasswordDto.ConfirmNewPassword != userChangePasswordDto.NewPassword)
             return new ActionResponse<Guid>(ActionResponseStatusCode.BadRequest, AppResource.NewAndConfirmPasswordsDoNotMatch);
 
         var userGetResponse = await _userService.GetAsync(userId, cancellationToken);
@@ -132,13 +133,13 @@ public class AccountService : IAccountService
 
         return await _userService.UpdateAsync(user, cancellationToken);
     }
-    public async Task<IActionResponse<Guid>> UpdateWalletAsync(Guid userId, string withdrawalWallet, CancellationToken cancellationToken = default)
+    public async Task<IActionResponse<Guid>> UpdateWalletAsync(Guid userId, UserUpdateWalletDto userUpdateWalletDto, CancellationToken cancellationToken = default)
     {
         var userGetResponse = await _userService.GetAsync(userId, cancellationToken);
         var user = userGetResponse.Data;
         if (user == null) return new ActionResponse<Guid>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
 
-        user.WithdrawalWallet = withdrawalWallet;
+        user.WithdrawalWallet = userUpdateWalletDto.WithdrawalWallet;
 
         return await _userService.UpdateAsync(user, cancellationToken);
     }

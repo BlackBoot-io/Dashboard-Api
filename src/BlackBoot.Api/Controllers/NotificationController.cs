@@ -18,4 +18,8 @@ public class NotificationController : BaseController
     [HttpDelete]
     public async Task<IActionResult> DeleteAsync(Guid userId, int id, CancellationToken cancellationToken)
         => Ok(await _notificationService.DeleteAsync(userId, id, cancellationToken));
+
+    [HttpGet]
+    public async Task<IActionResult> CountAsync(Guid userId, CancellationToken cancellationToken)
+    => Ok(await _notificationService.CountAsync(userId, cancellationToken));
 }

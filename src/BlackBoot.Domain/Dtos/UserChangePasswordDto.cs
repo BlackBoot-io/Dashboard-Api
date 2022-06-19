@@ -7,5 +7,5 @@ public class UserChangePasswordDto
     [Required]
     public string NewPassword { get; set; }
     [Required]
-    public string ConfirmPassword { get; set; }
+    public string ConfirmNewPassword { get; set; }
 }
