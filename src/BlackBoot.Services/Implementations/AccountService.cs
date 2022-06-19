@@ -96,6 +96,7 @@ public class AccountService : IAccountService
             FullName = user.Data.FullName,
             Gender = user.Data.Gender,
             Nationality = user.Data.Nationality,
+            WalletAddress =user.Data.WithdrawalWallet
         });
     }
     public async Task<IActionResponse<Guid>> UpdateProfileAsync(UserDto userDto, CancellationToken cancellationToken = default)
