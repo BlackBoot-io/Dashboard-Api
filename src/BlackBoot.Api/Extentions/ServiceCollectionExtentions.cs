@@ -12,7 +12,7 @@ public static class ServiceCollectionExtentions
     {
         services.AddDbContext<BlackBootDBContext>((IServiceProvider serviceProvider, DbContextOptionsBuilder options) =>
         {
-            options.UseSqlServer(configuration["BlckBootDbContext"]);
+            options.UseSqlServer(configuration.GetConnectionString("BlckBootDbContext"));
         });
     }
     public static void AddBlackBootAuthentication(this IServiceCollection services, IConfiguration configuration)
@@ -25,14 +25,6 @@ public static class ServiceCollectionExtentions
               options.DefaultSignInScheme = "Bearer";
               options.DefaultAuthenticateScheme = "Bearer";
           })
-        .AddGoogle(options =>
-        {
-            var googleAuthNSection = configuration.GetSection("Authentication:Google");
-
-            options.ClientId = googleAuthNSection["ClientId"];
-            options.ClientSecret = googleAuthNSection["ClientSecret"];
-            //options.CallbackPath = "";
-        })
         .AddJwtBearer(cfg =>
         {
             cfg.RequireHttpsMetadata = false;

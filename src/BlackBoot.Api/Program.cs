@@ -15,7 +15,7 @@ builder.Services.AddBlockBootDbContext(configuration);
 
 builder.Services.AddControllers().AddJsonOptions(opt =>
 {
-    opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    //opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
 });
 
