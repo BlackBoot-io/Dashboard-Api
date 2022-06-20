@@ -139,7 +139,7 @@ public class AccountService : IAccountService
         var user = userGetResponse.Data;
         if (user == null) return new ActionResponse<Guid>(ActionResponseStatusCode.NotFound, AppResource.UserNotFound);
 
-        user.WithdrawalWallet = userUpdateWalletDto.WithdrawalWallet;
+        user.WithdrawalWallet = userUpdateWalletDto.WalletAddress;
 
         return await _userService.UpdateAsync(user, cancellationToken);
     }

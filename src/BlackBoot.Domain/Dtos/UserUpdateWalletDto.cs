@@ -3,6 +3,6 @@
     public class UserUpdateWalletDto
     {
         [Required]
-        public string WithdrawalWallet { get; set; }
+        public string WalletAddress { get; set; }
     }
 }
