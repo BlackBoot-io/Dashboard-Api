@@ -168,7 +168,8 @@ public class AccountService : IAccountService
                 Email = user.Data.Email,
                 FullName = user.Data.FullName,
                 Gender = user.Data.Gender,
-                Nationality = user.Data.Nationality
+                Nationality = user.Data.Nationality,
+                BirthdayDate = user.Data.BirthdayDate.Value
             }
         };
 
