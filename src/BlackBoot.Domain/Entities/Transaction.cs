@@ -16,7 +16,7 @@ public class Transaction : IEntity
     [ForeignKey(nameof(CrowdSaleScheduleId))]
     public CrowdSaleSchedule CrowdSaleSchedule { get; set; }
 
-    public int CrowdSaleScheduleId { get; set; }
+    public int? CrowdSaleScheduleId { get; set; }
 
     public BlockchainNetwork Network { get; set; }
 

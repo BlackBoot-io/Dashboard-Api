@@ -141,4 +141,7 @@
   <data name="NoWalletExist" xml:space="preserve">
     <value>Sorry! There is no available wallet address in your selected network.</value>
   </data>
+  <data name="InsufficientBalance" xml:space="preserve">
+    <value>Sorry! Your Balance is not enough.</value>
+  </data>
 </root>
