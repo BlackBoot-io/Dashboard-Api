@@ -38,11 +38,11 @@ public class AccountController : BaseController
     public async Task<IActionResult> LogoutAsync(Guid userId, string refreshToken, CancellationToken cancellationToken)
         => Ok(await _accountService.LogoutAsync(userId, refreshToken, cancellationToken));
 
-    [HttpPost]
+    [HttpPost, AllowAnonymous]
     public async Task<IActionResult> SignupAsync(User user, CancellationToken cancellationToken)
         => Ok(await _accountService.SignupAsync(user, cancellationToken));
 
-    [HttpPost]
+    [HttpPost, AllowAnonymous]
     public IActionResult RecoveryPassword(Guid userId, string email)
         => Ok(_accountService.RecoveryPassword(userId, email));
 }
