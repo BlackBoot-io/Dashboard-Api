@@ -1,10 +1,7 @@
 ﻿using BlackBoot.Services.ExternalAdapter;
 using Google.Apis.Auth;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using static Google.Apis.Auth.GoogleJsonWebSignature;
 
 namespace BlackBoot.Services.Implementations;
 
@@ -97,7 +94,7 @@ public class AccountService : IAccountService
             Gender = user.Data.Gender,
             BirthdayDate = user.Data.BirthdayDate.Value,
             Nationality = user.Data.Nationality,
-            WalletAddress =user.Data.WithdrawalWallet
+            WalletAddress = user.Data.WithdrawalWallet
         });
     }
     public async Task<IActionResponse<Guid>> UpdateProfileAsync(Guid userId, UserDto userDto, CancellationToken cancellationToken = default)

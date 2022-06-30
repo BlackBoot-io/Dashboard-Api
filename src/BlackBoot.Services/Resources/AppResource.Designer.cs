@@ -70,6 +70,15 @@ namespace BlackBoot.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sorry! Your Balance is not enough..
+        /// </summary>
+        public static string InsufficientBalance {
+            get {
+                return ResourceManager.GetString("InsufficientBalance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to InvalidUser.
         /// </summary>
         public static string InvalidUser {
