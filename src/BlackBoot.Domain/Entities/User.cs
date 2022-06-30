@@ -17,7 +17,7 @@ public class User : IEntity
     public string FullName { get; set; } = null!;
 
     [Required, MaxLength(20)]
-    public string Nationality { get; set; } = null!;
+    public string Nationality { get; set; } = "USA";
 
     [Required, MaxLength(128)]
     public string Email { get; set; }
