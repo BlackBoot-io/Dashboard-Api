@@ -17,6 +17,16 @@ public static class HashGenerator
         return Convert.ToBase64String(HashAlgorithm.Create("SHA256")!.ComputeHash(array));
     }
 
+    public static string Hash(string key, string salt)
+    {
+
+        byte[] bytes = Encoding.Unicode.GetBytes(key);
+        byte[] bytes2 = Encoding.Unicode.GetBytes(salt);
+        byte[] array = new byte[bytes2.Length + bytes.Length];
+        Buffer.BlockCopy(bytes2, 0, array, 0, bytes2.Length);
+        Buffer.BlockCopy(bytes, 0, array, bytes2.Length, bytes.Length);
+        return Convert.ToBase64String(HashAlgorithm.Create("SHA256")!.ComputeHash(array));
+    }
     public static string EncryptString(string plainText)
     {
         byte[] iv = new byte[16];

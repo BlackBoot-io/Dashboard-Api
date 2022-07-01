@@ -25,12 +25,16 @@ public class User : IEntity
     [Required, MaxLength(256)]
     public string Password { get; set; }
 
+    public string PasswordSalt { get; set; }
+
     [MaxLength(256)]
     public string WithdrawalWallet { get; set; }
 
     public DateTime RegistrationDate { get; set; }
 
     public DateTime? BirthdayDate { get; set; }
+
+    public byte[] Avatar { get; set; }
 
     public ICollection<Transaction> Transactions { get; set; }
     public ICollection<Notification> Notifications { get; set; }
