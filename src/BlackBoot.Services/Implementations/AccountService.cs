@@ -12,8 +12,9 @@ public class AccountService : IAccountService
     private readonly IUserJwtTokenService _userTokenService;
     private readonly IJwtTokenFactory _tokenFactoryService;
     private readonly IConfiguration _configuration;
-
     private readonly EmailGatwayAdapter _emailGatwayAdapter;
+
+    private string _defaultAvatar = "iVBORw0KGgoAAAANSUhEUgAAACIAAAAiCAYAAAA6RwvCAAAABmJLR0QA/wD/AP+gvaeTAAADDUlEQVRYhe3XTYiVZRQH8N8dFSJrpZGpq6hwVVAGCqHt+lpYGdQisggac4J2umgnhIsUjCCCQDNKmgicvoSMFn1BqWBljTY50WiZm0HKzxTmtjjnxdvlve97753JTf3h4bn3fPzveb7OOZf/8U80+vBZglW4DQtxXcp/x3Hsx7v4cSYCbMcAHschNDGFUezBjhx7Uj+VNqNYk74zgpU4mORfYVDsRCcsxFp8nT7fYsV0gxjCRYzhQb0dZQOr0/cC1vUbxBaxol24ql+S9B1Jrs29Og+l41Yzc8YDeDE5n+7WaaU4jl01QdwnVnoUE2l/d00wI+KY7qgLYha+E0+v03EM4FWxul/wWo6JlL2i8126Gj/hGzU7/USSPVBh81zabMTsFvkcPJ+6DRX+D6XNY1WBHBJPtGpFp/FWBcc7+BNzO+gb2IsfOhEsyUgHK37k3rSpygt3pk3VfVmXNjcVgtZzuj+VH1QQXJPz0QqbiZyvrbApnvOqskBuxWH8VkFwIufrK2xuyPnXCpvjItEtLVN+iY8qnOFKnMR7HfQN7MYkrqjh+hiflyl+Fs+wDs+KbX0pA2sN8uXUDXXBswPjZYrxVNahgRdElZ3E+zkmU7apCw54HUfKFF+I7eoWy7FdJKcD2IZlPfh/gs/KFG+LHuJy4TCGiy+tr2a/yCWLL0MQi0QO2VumvFF31fEWrBer2See4ViSDqfu5hqOZ7QltHaMis6qPcU38Ai+T4KmuNy7sRNv4kNx+YpW8WD6lHHtS66OWJMkq1tkC/Bpyg+IEjC/gmM+nkrbZvouaNE/nPJHqwIZED3mmGgD5olVnhLNcy9NUtFwnxKlf54omkcyyFquFaJ5GRHbfha39xBAO5YlxxsiI3fVGBUoquOU6DGmi00u3Z21vTrvTMcT4rn1i8XJ0UzOvjCcBBdEWu/1jmxO36Y4mmlhEOeS7EwSlpbvxFLxnM+kzzk8Od0gCswRTfF5l/LIX6LQjeeYTFmhPy+q8ewSvhnBPaKLO4Y/xF+Pi/n5mKjEd/1bP/7fwd9Yt9Wn5+1cgAAAAABJRU5ErkJggg==";
 
     public AccountService(IUserService userService,
                           IUserJwtTokenService userTokenService,
@@ -94,7 +95,9 @@ public class AccountService : IAccountService
             Gender = user.Data.Gender,
             BirthdayDate = user.Data.BirthdayDate.Value,
             Nationality = user.Data.Nationality,
-            WalletAddress = user.Data.WithdrawalWallet
+            WalletAddress = user.Data.WithdrawalWallet,
+            Avatar = "data:image/png;base64," + Convert.ToBase64String(user.Data.Avatar),
+
         });
     }
     public async Task<IActionResponse<Guid>> UpdateProfileAsync(Guid userId, UserDto userDto, CancellationToken cancellationToken = default)
@@ -167,7 +170,8 @@ public class AccountService : IAccountService
                 Gender = user.Data.Gender,
                 Nationality = user.Data.Nationality,
                 BirthdayDate = user.Data.BirthdayDate,
-                WalletAddress = user.Data.WithdrawalWallet
+                WalletAddress = user.Data.WithdrawalWallet,
+                Avatar = "data:image/png;base64," + Convert.ToBase64String(user.Data.Avatar),
             }
         };
 
@@ -177,6 +181,7 @@ public class AccountService : IAccountService
     public async Task<IActionResponse<UserTokenDto>> SignupAsync(User user, CancellationToken cancellationToken = default)
     {
         user.Password = HashGenerator.Hash(user.Password);
+        user.Avatar = Convert.FromBase64String(_defaultAvatar);
         var addedUser = await _userService.AddAsync(user, cancellationToken);
 
         if (!addedUser.IsSuccess)

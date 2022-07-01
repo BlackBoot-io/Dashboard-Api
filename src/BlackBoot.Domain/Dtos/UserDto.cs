@@ -9,4 +9,6 @@ public class UserDto
     public string Nationality { get; set; } = null!;
     public DateTime? BirthdayDate { get; set; }
     public string WalletAddress { get; set; }
+
+    public string Avatar { get; set; }
 }
