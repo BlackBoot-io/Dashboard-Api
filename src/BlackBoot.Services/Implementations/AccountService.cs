@@ -166,7 +166,7 @@ public class AccountService : IAccountService
                 FullName = user.Data.FullName,
                 Gender = user.Data.Gender,
                 Nationality = user.Data.Nationality,
-                BirthdayDate = user.Data.BirthdayDate.Value,
+                BirthdayDate = user.Data.BirthdayDate,
                 WalletAddress = user.Data.WithdrawalWallet
             }
         };

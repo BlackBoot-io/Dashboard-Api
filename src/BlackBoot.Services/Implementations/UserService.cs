@@ -22,6 +22,8 @@ public class UserService : IUserService
     {
         await _users.AddAsync(user);
 
+
+
         var dbResult = await _context.SaveChangesAsync();
         if (!dbResult.ToSaveChangeResult())
             return new ActionResponse<Guid>(ActionResponseStatusCode.ServerError);

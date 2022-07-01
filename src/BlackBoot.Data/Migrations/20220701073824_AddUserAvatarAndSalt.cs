@@ -14,11 +14,6 @@ namespace BlackBoot.Data.Migrations
                 schema: "Payment",
                 table: "Transaction");
 
-            migrationBuilder.DeleteData(
-                schema: "Base",
-                table: "User",
-                keyColumn: "UserId",
-                keyValue: new Guid("5e6cf75c-5f8b-4314-a2f7-ac447aac2b35"));
 
             migrationBuilder.AddColumn<byte[]>(
                 name: "Avatar",
@@ -44,11 +39,6 @@ namespace BlackBoot.Data.Migrations
                 oldClrType: typeof(int),
                 oldType: "int");
 
-            migrationBuilder.InsertData(
-                schema: "Base",
-                table: "User",
-                columns: new[] { "UserId", "Avatar", "BirthdayDate", "Email", "FullName", "Gender", "IsActive", "Nationality", "Password", "PasswordSalt", "RegistrationDate", "WithdrawalWallet" },
-                values: new object[] { new Guid("822f1c27-599f-4ba0-813c-8a664c46548a"), null, new DateTime(2022, 7, 1, 12, 8, 24, 121, DateTimeKind.Local).AddTicks(2381), "Admin@BlackBoot.io", "Admin", (byte)1, true, "", "SELEtxzRpGEVskq+ddvHykdlDA2P8hB/2UHoo0uquvc=", null, new DateTime(2022, 7, 1, 12, 8, 24, 121, DateTimeKind.Local).AddTicks(2349), null });
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Transaction_CrowdSaleSchedule_CrowdSaleScheduleId",
