@@ -124,6 +124,15 @@ namespace BlackBoot.Services.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Token count must be more than zero..
+        /// </summary>
+        public static string TokenCountMustBeMoreThanZero {
+            get {
+                return ResourceManager.GetString("TokenCountMustBeMoreThanZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Current Transaction is failed! Please try again later..
         /// </summary>
         public static string TransactionFailed {
@@ -138,6 +147,15 @@ namespace BlackBoot.Services.Resources {
         public static string UserNotFound {
             get {
                 return ResourceManager.GetString("UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is no Withdrawal Address, Please set your withdraw address on your profile..
+        /// </summary>
+        public static string WithdrawalWalletNotFound {
+            get {
+                return ResourceManager.GetString("WithdrawalWalletNotFound", resourceCulture);
             }
         }
     }

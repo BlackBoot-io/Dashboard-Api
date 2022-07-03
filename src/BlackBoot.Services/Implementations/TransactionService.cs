@@ -6,18 +6,28 @@ public class TransactionService : ITransactionService
     private readonly DbSet<Transaction> _transactions;
     private readonly IWalletPoolService _walletPoolService;
     private readonly ICrowdSaleScheduleService _crowdSaleScheduleService;
+    private readonly IUserService _userService;
 
     public TransactionService(BlackBootDBContext context,
         IWalletPoolService walletPoolService,
-        ICrowdSaleScheduleService crowdSaleScheduleService)
+        ICrowdSaleScheduleService crowdSaleScheduleService,
+        IUserService userService)
     {
         _context = context;
         _transactions = context.Set<Transaction>();
         _walletPoolService = walletPoolService;
         _crowdSaleScheduleService = crowdSaleScheduleService;
+        _userService = userService;
     }
     public async Task<IActionResponse<TransactionDto>> Add(Transaction trx)
     {
+        if (trx.TokenCount == 0)
+            return new ActionResponse<TransactionDto>
+            {
+                IsSuccess = false,
+                Message = AppResource.TokenCountMustBeMoreThanZero
+            };
+
         if (trx.Type == TransactionType.Deposit)
         {
             var crowdSale = await _crowdSaleScheduleService.GetCurrentSaleAsync();
@@ -49,6 +59,22 @@ public class TransactionService : ITransactionService
         }
         else
         {
+
+            var currentUser = await _userService.GetAsync(trx.UserId);
+            if (!currentUser.IsSuccess)
+                return new ActionResponse<TransactionDto>
+                {
+                    IsSuccess = false,
+                    Message = AppResource.UserNotFound
+                };
+            if (string.IsNullOrEmpty(currentUser.Data.WithdrawalWallet))
+                return new ActionResponse<TransactionDto>
+                {
+                    IsSuccess = false,
+                    Message = AppResource.WithdrawalWalletNotFound
+                };
+
+            trx.WalletAddress = currentUser.Data.WithdrawalWallet;
             var balance = await GetUserBalance(trx.UserId);
             if (balance.Data < trx.TokenCount)
                 return new ActionResponse<TransactionDto>

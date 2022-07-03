@@ -144,4 +144,10 @@
   <data name="InsufficientBalance" xml:space="preserve">
     <value>Sorry! Your Balance is not enough.</value>
   </data>
+  <data name="TokenCountMustBeMoreThanZero" xml:space="preserve">
+    <value>Token count must be more than zero.</value>
+  </data>
+  <data name="WithdrawalWalletNotFound" xml:space="preserve">
+    <value>There is no Withdrawal Address, Please set your withdraw address on your profile.</value>
+  </data>
 </root>
