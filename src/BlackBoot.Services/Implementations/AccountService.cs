@@ -97,7 +97,7 @@ public class AccountService : IAccountService
             Nationality = user.Data.Nationality,
             WalletAddress = user.Data.WithdrawalWallet,
             Avatar = "data:image/png;base64," + Convert.ToBase64String(user.Data.Avatar),
-
+            UserId = user.Data.UserId
         });
     }
     public async Task<IActionResponse<Guid>> UpdateProfileAsync(Guid userId, UserDto userDto, CancellationToken cancellationToken = default)
