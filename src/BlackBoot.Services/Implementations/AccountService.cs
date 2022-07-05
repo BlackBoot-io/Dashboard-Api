@@ -96,7 +96,7 @@ public class AccountService : IAccountService
             BirthdayDate = user.Data.BirthdayDate.Value,
             Nationality = user.Data.Nationality,
             WalletAddress = user.Data.WithdrawalWallet,
-            Avatar = "data:image/png;base64," + Convert.ToBase64String(user.Data.Avatar),
+            Avatar = "data:image/png;base64," + user?.Data?.Avatar is null ? _defaultAvatar : Convert.ToBase64String(user.Data.Avatar),
             UserId = user.Data.UserId
         });
     }
