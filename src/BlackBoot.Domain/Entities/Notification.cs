@@ -13,6 +13,12 @@ public class Notification
 
     public Guid? UserId { get; set; }
 
+    [MaxLength(255)]
+    public string Sender { get; set; }
+
+    [MaxLength(255)]
+    public string Subject { get; set; }
+
     public MessageTarget Target { get; set; }
     public MessageType Type { get; set; }
 

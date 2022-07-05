@@ -43,6 +43,4 @@ public class UserService : IUserService
 
     public IActionResponse<bool> CheckPassword(User user, string password, CancellationToken cancellationToken = default)
         => new ActionResponse<bool>(HashGenerator.Hash(password) == user.Password);
-
-
 }

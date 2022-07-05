@@ -101,7 +101,10 @@ public class TransactionService : ITransactionService
     }
 
     public async Task<IActionResponse<IEnumerable<Transaction>>> GetAll(Guid userid)
-        => new ActionResponse<IEnumerable<Transaction>>(await _transactions.Where(X => X.UserId == userid).AsNoTracking().ToListAsync());
+        => new ActionResponse<IEnumerable<Transaction>>(await _transactions.Where(X => X.UserId == userid)
+            .OrderByDescending(X=>X.TransactionId)
+            .AsNoTracking()
+            .ToListAsync());
 
     public async Task<IActionResponse<Transaction>> GetById(Guid transactionId)
         => new ActionResponse<Transaction>(await _transactions.Include(X => X.CrowdSaleSchedule).FirstOrDefaultAsync(X => X.TransactionId == transactionId));
