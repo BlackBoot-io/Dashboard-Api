@@ -171,7 +171,7 @@ public class AccountService : IAccountService
                 Nationality = user.Data.Nationality,
                 BirthdayDate = user.Data.BirthdayDate,
                 WalletAddress = user.Data.WithdrawalWallet,
-                Avatar = "data:image/png;base64," + user.Data.Avatar is null ? _defaultAvatar : Convert.ToBase64String(user.Data.Avatar),
+                Avatar = "data:image/png;base64," + user?.Data?.Avatar is null ? _defaultAvatar : Convert.ToBase64String(user.Data.Avatar),
             }
         };
 
