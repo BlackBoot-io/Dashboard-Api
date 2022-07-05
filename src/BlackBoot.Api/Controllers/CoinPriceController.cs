@@ -8,7 +8,5 @@ public class CoinPriceController : BaseController
 
     [HttpGet, AllowAnonymous]
     public async Task<IActionResult> GetAsync(string symbol)
-    => Ok(await _coinPriceService.GetPrice(symbol));
-
+       => Ok(await _coinPriceService.GetPrice(symbol));
 }
-
