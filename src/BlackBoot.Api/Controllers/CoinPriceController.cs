@@ -6,7 +6,7 @@ public class CoinPriceController : BaseController
     public CoinPriceController(ICoinPriceService coinPriceService)
         => _coinPriceService = coinPriceService;
 
-    [HttpGet]
+    [HttpGet, AllowAnonymous]
     public async Task<IActionResult> GetAsync(string symbol)
     => Ok(await _coinPriceService.GetPrice(symbol));
 

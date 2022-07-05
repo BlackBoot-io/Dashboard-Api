@@ -7,11 +7,11 @@ public class CrowdSaleScheduleController : BaseController
     public CrowdSaleScheduleController(ICrowdSaleScheduleService crowdSaleScheduleService)
         => _crowdSaleScheduleService = crowdSaleScheduleService;
 
-    [HttpGet]
+    [HttpGet, AllowAnonymous]
     public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
         => Ok(await _crowdSaleScheduleService.GetAllAsync(cancellationToken));
 
-    [HttpGet]
+    [HttpGet, AllowAnonymous]
     public async Task<IActionResult> GetCurrentSaleAsync()
        => Ok(await _crowdSaleScheduleService.GetCurrentSaleAsync());
 }
