@@ -28,7 +28,9 @@ public class Transaction : IEntity
     /// <summary>
     /// Crypto Amount
     /// </summary>
-    public int CryptoAmount { get; set; }
+     [Column(TypeName = "decimal(21,9)")]
+    public decimal CryptoAmount { get; set; }
+
     public DateTime Date { get; set; }
     public int TokenCount { get; set; }
     public int BonusCount { get; set; }

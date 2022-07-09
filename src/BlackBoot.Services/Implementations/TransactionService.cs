@@ -55,7 +55,9 @@ public class TransactionService : ITransactionService
 
             trx.TransactionId = Guid.NewGuid();
             trx.BonusCount = crowdSale.Data.BonusCount;
+             
             trx.CrowdSaleScheduleId = crowdSale.Data.CrowdSaleScheduleId;
+            trx.WalletAddress = wallet.Data.Address;
         }
         else
         {
@@ -97,6 +99,7 @@ public class TransactionService : ITransactionService
         {
             TransactionId = trx.TransactionId,
             Network = trx.Network,
+            WalletAddress = trx.WalletAddress
         });
     }
 
