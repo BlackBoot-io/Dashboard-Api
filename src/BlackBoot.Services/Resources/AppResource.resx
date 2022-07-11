@@ -124,13 +124,13 @@
     <value>InvalidUser</value>
   </data>
   <data name="NewAndConfirmPasswordsDoNotMatch" xml:space="preserve">
-    <value>NewAndConfirmPasswordsDoNotMatch</value>
+    <value>NewPassword and ConfirmPassword do not match</value>
   </data>
   <data name="PreviousPasswordsDoNotMatch" xml:space="preserve">
-    <value>PreviousPasswordsDoNotMatch</value>
+    <value>Previous passwords do not match</value>
   </data>
   <data name="UserNotFound" xml:space="preserve">
-    <value>UserNotFound</value>
+    <value>User not found</value>
   </data>
   <data name="TransactionFailed" xml:space="preserve">
     <value>Current Transaction is failed! Please try again later.</value>

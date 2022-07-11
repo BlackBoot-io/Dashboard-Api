@@ -97,7 +97,7 @@ namespace BlackBoot.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to NewAndConfirmPasswordsDoNotMatch.
+        ///   Looks up a localized string similar to NewPassword and ConfirmPassword do not match.
         /// </summary>
         public static string NewAndConfirmPasswordsDoNotMatch {
             get {
@@ -115,7 +115,7 @@ namespace BlackBoot.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PreviousPasswordsDoNotMatch.
+        ///   Looks up a localized string similar to Previous passwords do not match.
         /// </summary>
         public static string PreviousPasswordsDoNotMatch {
             get {
@@ -142,7 +142,7 @@ namespace BlackBoot.Services.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UserNotFound.
+        ///   Looks up a localized string similar to User not found.
         /// </summary>
         public static string UserNotFound {
             get {
