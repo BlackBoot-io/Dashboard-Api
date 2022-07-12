@@ -4,6 +4,7 @@ using BlackBoot.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlackBoot.Data.Migrations
 {
     [DbContext(typeof(BlackBootDBContext))]
-    partial class BlackBootDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220712045237_Change.User.Avatar")]
+    partial class ChangeUserAvatar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

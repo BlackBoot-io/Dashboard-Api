@@ -34,7 +34,8 @@ public class User : IEntity
 
     public DateTime? BirthdayDate { get; set; }
 
-    public byte[] Avatar { get; set; }
+    [MaxLength(200)]
+    public string Avatar { get; set; }
 
     public ICollection<Transaction> Transactions { get; set; }
     public ICollection<Notification> Notifications { get; set; }

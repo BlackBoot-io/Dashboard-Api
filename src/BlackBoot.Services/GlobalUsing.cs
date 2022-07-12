@@ -2,6 +2,7 @@
 global using BlackBoot.Domain.Dtos;
 global using BlackBoot.Domain.Entities;
 global using BlackBoot.Domain.Enums;
+global using BlackBoot.Services.Extensions;
 global using BlackBoot.Services.Interfaces;
 global using BlackBoot.Services.Resources;
 global using BlackBoot.Shared.Core;

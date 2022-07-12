@@ -8,3 +8,4 @@ global using BlackBoot.Shared.Extentions;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
+global using BlackBoot.Services.Extensions;

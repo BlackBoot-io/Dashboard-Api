@@ -47,6 +47,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseStaticFiles();
 app.UseRouting();
 
 app.UseCors();
