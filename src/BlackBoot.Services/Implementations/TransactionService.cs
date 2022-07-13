@@ -21,6 +21,7 @@ public class TransactionService : ITransactionService
     }
     public async Task<IActionResponse<TransactionDto>> Add(Transaction trx)
     {
+        string qr = string.Empty;
         if (trx.TokenCount == 0)
             return new ActionResponse<TransactionDto>
             {
@@ -55,9 +56,11 @@ public class TransactionService : ITransactionService
 
             trx.TransactionId = Guid.NewGuid();
             trx.BonusCount = crowdSale.Data.BonusCount;
-             
+
             trx.CrowdSaleScheduleId = crowdSale.Data.CrowdSaleScheduleId;
             trx.WalletAddress = wallet.Data.Address;
+            qr = Qr.Generate(trx.WalletAddress);
+
         }
         else
         {
@@ -99,13 +102,14 @@ public class TransactionService : ITransactionService
         {
             TransactionId = trx.TransactionId,
             Network = trx.Network,
-            WalletAddress = trx.WalletAddress
+            WalletAddress = trx.WalletAddress,
+            Qr = qr
         });
     }
 
     public async Task<IActionResponse<IEnumerable<Transaction>>> GetAll(Guid userid)
         => new ActionResponse<IEnumerable<Transaction>>(await _transactions.Where(X => X.UserId == userid)
-            .OrderByDescending(X=>X.TransactionId)
+            .OrderByDescending(X => X.TransactionId)
             .AsNoTracking()
             .ToListAsync());
 
