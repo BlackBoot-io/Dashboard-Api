@@ -10,7 +10,7 @@ public class CoinPriceService : ICoinPriceService
     {
         _configuration = configuration;
     }
-    public async Task<ActionResponse<CoinPriceDto>> GetPrice(string symbol)
+    public async Task<ActionResponse<List<CoinPriceDto>>> GetPrice(string symbol)
     {
         var url = _configuration.GetSection("CoinListProvider:PriceUrl").Value;
         var parameters = new Dictionary<string, string>()
@@ -23,6 +23,6 @@ public class CoinPriceService : ICoinPriceService
                     {"sparkline", "false" }
                 };
         var inquiryCoinPrice = await HttpRequest.GetAsync<List<CoinPriceDto>>(url, parameters);
-        return new ActionResponse<CoinPriceDto>(inquiryCoinPrice.First());
+        return new ActionResponse<List<CoinPriceDto>>(inquiryCoinPrice);
     }
 }
