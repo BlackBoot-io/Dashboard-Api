@@ -2,6 +2,5 @@
 
 public interface ICoinPriceService : IScopedDependency
 {
-    Task<ActionResponse<CoinPriceDto>> GetPrice(string symbol);
+    Task<ActionResponse<List<CoinPriceDto>>> GetPrice(string symbol);
 }
-

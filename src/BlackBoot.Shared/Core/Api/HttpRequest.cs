@@ -10,7 +10,7 @@ public static class HttpRequest
         if (parameter is not null)
             foreach (var item in parameter)
                 param += $"{item.Key}={item.Value}&";
-        var completeUrl = string.IsNullOrWhiteSpace(param) ? url : $"{url}?{param.Substring(0, param.Length - 1)}";
+        var completeUrl = string.IsNullOrWhiteSpace(param) ? url : $"{url}?{param[0..^1]}";
 
         using HttpClient client = new();
         var response = await client.GetAsync(completeUrl);
