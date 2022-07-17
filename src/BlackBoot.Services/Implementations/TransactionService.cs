@@ -29,6 +29,11 @@ public class TransactionService : ITransactionService
                 Message = AppResource.TokenCountMustBeMoreThanZero
             };
 
+        trx.Date = DateTime.Now;
+        trx.TransactionId = Guid.NewGuid();
+        trx.Status = TransactionStatus.Pending;
+        trx.Type = trx.Type;
+
         if (trx.Type == TransactionType.Deposit)
         {
             var crowdSale = await _crowdSaleScheduleService.GetCurrentSaleAsync();
@@ -56,15 +61,12 @@ public class TransactionService : ITransactionService
 
             trx.TransactionId = Guid.NewGuid();
             trx.BonusCount = crowdSale.Data.BonusCount;
-
             trx.CrowdSaleScheduleId = crowdSale.Data.CrowdSaleScheduleId;
             trx.WalletAddress = wallet.Data.Address;
             qr = Qr.Generate(trx.WalletAddress);
-
         }
         else
         {
-
             var currentUser = await _userService.GetAsync(trx.UserId);
             if (!currentUser.IsSuccess)
                 return new ActionResponse<TransactionDto>
@@ -89,10 +91,6 @@ public class TransactionService : ITransactionService
                 };
         }
 
-        trx.TransactionId = Guid.NewGuid();
-        trx.Date = DateTime.Now;
-        trx.Status = TransactionStatus.Pending;
-        trx.Type = trx.Type;
         _transactions.Add(trx);
         var dbResult = await _context.SaveChangesAsync();
         if (!dbResult.ToSaveChangeResult())
@@ -109,7 +107,7 @@ public class TransactionService : ITransactionService
 
     public async Task<IActionResponse<IEnumerable<Transaction>>> GetAll(Guid userid)
         => new ActionResponse<IEnumerable<Transaction>>(await _transactions.Where(X => X.UserId == userid)
-            .OrderByDescending(X => X.TransactionId)
+            .OrderByDescending(X => X.Date)
             .AsNoTracking()
             .ToListAsync());
 

@@ -25,8 +25,10 @@ public class CrowdSaleSchedule : IEntity
 
     public int BonusCount { get; set; }
 
+    [Column(TypeName = "decimal(21,9)")]
     public decimal Price { get; set; }
 
+    [Column(TypeName = "decimal(21,9)")]
     public decimal CurrentIncreaseRate { get; set; }
 
     [MaxLength(500)]
